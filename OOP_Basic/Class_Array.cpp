@@ -38,7 +38,10 @@ class Array {
         void Heapsort();
         void Hoar_sort();
         void Bit_sort();
+
+        //Перегрузка операции потокового ввода
         friend std::istream & operator >> (std::istream &, Array &);
+        //Перегрузка операции потокового вывода
         friend std::ostream & operator << (std::ostream &, Array &);
 };
 
