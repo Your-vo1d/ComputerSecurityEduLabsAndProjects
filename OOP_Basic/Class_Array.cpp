@@ -29,8 +29,11 @@ class Array {
 
         //Проверка на упорядоченность по неубыванию
         bool Test();
-        bool operator == (Array); // равенство элементов массивов (но не порядка)
 
+        // равенство элементов массивов (но не порядка)
+        bool operator == (Array); 
+        
+        //Сортировка Шелла
         void Shell_sort();
         void Heapsort();
         void Hoar_sort();
@@ -41,37 +44,48 @@ class Array {
 
 //Конструктор 1 по параметрам, длине и диапазону значений
 Array::Array(int len, int t, int min, int max) {
-    srand(time(NULL));
-    t %= 4;
-    ptr = new int[len];
-    this->len = len;
-    if (t == 1) {
-        for (int i = 0; i < len; i++) {
-            ptr[i] =  min + rand() % (max - min + 1);
+    if (len > 0) {
+        if (min > max) {
+            min = min ^ max;
+            max = min ^ max;
+            min = min ^ max; 
         }
-    }
-    else if (t == 2) {
-        for (int i = 0; i < len; i++) {
-            if (i == 0)
-                ptr[i] = min + rand() % max;
-            else {
-                ptr[i] = ptr[i - 1] + rand() % max;
+        t %= 4;
+        ptr = new int[len];
+        this->len = len;
+        srand(time(NULL));
+        //Если параметр = 1, то будет псевдослучайная последовательность
+        if (t == 1) {
+            for (int i = 0; i < len; i++) {
+                ptr[i] =  min + rand() % (max - min + 1);
             }
         }
-    }
-    else if (t == 3) {
-        for (int i = 0; i < len; i++) {
-            if (i == 0)
-                ptr[i] = max - rand() % min;
-            else {
-                ptr[i] = ptr[i - 1] - rand() % min;
+        //Если параметр = 2, то будет последовательность формируется по неубыванию
+        else if (t == 2) {
+            for (int i = 0; i < len; i++) {
+                if (i == 0)
+                    ptr[i] = min + rand() % max;
+                else {
+                    ptr[i] = ptr[i - 1] + rand() % max;
+                }
             }
         }
-    }
-    else {
-        std::cout << "Input error.\n";
-        for (int i = 0; i < len; i++)
-            ptr[i] = i;
+        //Если параметр = 3, то будет последовательность формируется по невозрастанию
+        else if (t == 3) {
+            for (int i = 0; i < len; i++) {
+                if (i == 0)
+                    ptr[i] = max - rand() % min;
+                else {
+                    ptr[i] = ptr[i - 1] - rand() % min;
+                }
+            }
+        }
+        //Если параметр другой, то последовательность состоит из 1 элемента (минимального элемента)
+        else {
+            std::cout << "Input error.\n";
+            for (int i = 0; i < len; i++)
+                ptr[i] = min;
+        }
     }
 }
 
@@ -202,17 +216,27 @@ std::istream& operator>>(std::istream& in, Array& a) {
 std::ostream & operator << (std::ostream &out, Array &a) {
     for (int i = 0; i < a.len; i++)
         std::cout << a.ptr[i];
+    std::cout << std::endl;
 }
 
 
 void main() {
     int len1;
-    std::cout << "Enter a size";
+    std::cout << "Enter a size: ";
     std::cin >> len1;
     //Создание массива с параметром - длиной массива
     Array array1[len1];
+    std::cout << array1 << std::endl;
 
-    std::cout << "Enter a size";
-    std::cin >> len1;
+    int parametr_t;
+    std::cout << "Enter a t parametr: ";
+    std::cin >> parametr_t;
+    Array array2[len1, 1];
+    Array array3[len1 + 4, 2];
+    Array array4[len1 + 9, 3];
+    Array array5[len1 + 9, 3, 0];
+    Array array6[len1 + 9, 3, 0, 100];
+    Array array7[len1 + 11, 1, -100, 100];
 
+    Array array9[len1 + 13, 3, 150, 300];
 }
