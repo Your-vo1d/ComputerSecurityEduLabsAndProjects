@@ -59,7 +59,7 @@ Array::Array(size_t len, int order, int min, int max)
         ptr = new int[len];
         if (ptr != nullptr) // Проверка выделения памяти
         {
-            this->len = len;
+            this->len = len;   // Инициализация длины массива
             srand(time(NULL)); // Инициализация генератора псевдослучайных чисел
             if (order == 1)    // Если параметр = 1, то будет псевдослучайная последовательность
             {
@@ -73,10 +73,10 @@ Array::Array(size_t len, int order, int min, int max)
                 for (int i = 0; i < len; i++)
                 {
                     if (i == 0)
-                        ptr[i] = min + rand() % max;
+                        ptr[i] = min + rand() % max; // Генерация 1-ого числа, которое >= минимального
                     else
                     {
-                        ptr[i] = ptr[i - 1] + rand() % max;
+                        ptr[i] = ptr[i - 1] + rand() % max; // Генерация случайного числа, которое >= предыдущего
                     }
                 }
             }
@@ -85,22 +85,23 @@ Array::Array(size_t len, int order, int min, int max)
                 for (int i = 0; i < len; i++)
                 {
                     if (i == 0)
-                        ptr[i] = max - rand() % min;
+                        ptr[i] = max - rand() % min; // Генерация 1-ого числа, которое <= максимального
                     else
                     {
-                        ptr[i] = ptr[i - 1] - rand() % min;
+                        ptr[i] = ptr[i - 1] - rand() % min; // Генерация случайного числа, которое <= предыдущего
                     }
                 }
             }
-            else // Если параметр другой, то последовательность состоит из 1 элемента (минимального элемента)
+            else // Если параметр другой, то последовательность состоит из 1 элемента (самого параметра)
             {
-                std::cout << "Input error.\n";
+                std::cout << "Input error.\n"; // Сообщение об ошибке
                 for (int i = 0; i < len; i++)
-                    ptr[i] = min;
+                    ptr[i] = order; // Заполнение массива 1 числом
             }
         }
     }
 }
+
 
 // Конструтор 2 (по указателю и длине массива)
 Array::Array(int *array, size_t len)
@@ -159,23 +160,23 @@ Array &Array::operator=(Array &a)
 // Перегрузка операции взятие элемента по индексе
 int &Array::operator[](int i)
 {
-    if (i < 0 || i >= len) //Проверка корректности ввода индекса
+    if (i < 0 || i >= len) // Проверка корректности ввода индекса
     {
-        std::cout << "\n Индекс за пределами массива" << std::endl; //Вывод сообщения об ошибке
-        return ptr[0]; //Возвращение 1 элемента
+        std::cout << "\n Индекс за пределами массива" << std::endl; // Вывод сообщения об ошибке
+        return ptr[0];                                              // Возвращение 1 элемента
     }
-    return ptr[i];//Возвращение i-ого элемента
+    return ptr[i]; // Возвращение i-ого элемента
 }
 
 // Проверка на упорядоченность по неубыванию
 bool Array::Test()
 {
-    for (int i = 0; i < len - 1; i++) //Проход по всем элементам
+    for (int i = 0; i < len - 1; i++) // Проход по всем элементам
     {
-        if (ptr[i] > ptr[i + 1]) //Если текущий элемент меньше следуюшего, то массив неупорядочен
-            return false; //Массив неупорядочен
+        if (ptr[i] > ptr[i + 1]) // Если текущий элемент меньше следуюшего, то массив неупорядочен
+            return false;        // Массив неупорядочен
     }
-    return true; //Массив упорядочен
+    return true; // Массив упорядочен
 }
 
 // Перегрузка для операции '=='
@@ -187,43 +188,6 @@ bool Array::operator==(Array a)
     }
 
     // Проверка с перемещением с конца на найденое место
-    bool flag = false;
-
-    for (int i = 0; i < len; i++)
-    {
-        for (int j = 0; j < len; j++)
-        {
-            if (a[i] == this->ptr[j])
-            {
-                a[i] = a[len - 1];
-                a.len--;
-            }
-        }
-    }
-
-    if (a.len == 1)
-    {
-        return true;
-    }
-    return false;
-
-    // Создаем копии обоих массивов, чтобы не менять оригинальные данные
-    Array arr1(*this);
-    Array arr2(a);
-
-    // Сортируем оба массива с использованием std::sort
-    std::sort(arr1.ptr, arr1.ptr + len);
-    std::sort(arr2.ptr, arr2.ptr + len);
-
-    bool found = false;
-
-    for (int i = 0; i < len; i++)
-    {
-        if (arr1[i] != arr2[i])
-        {
-            return false;
-        }
-    }
 }
 
 std::istream &operator>>(std::istream &in, Array &a)
