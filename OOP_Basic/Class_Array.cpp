@@ -303,7 +303,9 @@ void main()
 
     //Объект класса Array с 3 параметрами - длиной, параметр порядка элемента, начало диапазона чисел (отриц)
     Array array_3_parameter_len_order_2_min_negative(len_array, 2, -100);
-    
+    std::cout <<"Array with parameters: length, order (by non - decreasing), min (negative)" << std::endl;
+    std::cout << array_3_parameter_len_order_2_min_negative; //Вывод массива с параметрами: длина, порядок (2 - не по убыванию), минимум (отрицательный)
+
     //Объект класса Array с 3 параметрами - длиной, параметр порядка элемента, начало диапазона чисел (полож)
     Array array_3_parameter_len_order_2_min_positive(len_array, 2, 50);
 
