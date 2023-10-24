@@ -181,19 +181,25 @@ bool Array::Test()
 }
 
 // Перегрузка для операции '=='
-bool Array::operator==(Array a)
-{
-    if (len != a.len)
-    {
+bool Array::operator==(Array a) {
+    if (len != a.len) {
         return false;
     }
 
-    std::sort(a.ptr, a.ptr + a.len);
+    // Создаем копии обоих массивов, чтобы не менять оригинальные данные
+    Array arr1(*this);
+    Array arr2(a);
 
-    // Проверка с перемещением с конца на найденое место
+    // Сортируем оба массива с использованием std::sort
+    std::sort(arr1.ptr, arr1.ptr + len);
+    std::sort(arr2.ptr, arr2.ptr + len);
+
     for (int i = 0; i < len; i++) {
-
+        if (arr1[i] != arr2[i]) {
+            return false;
+        }
     }
+    return true;
 }
 
 // Перегрузка операции потокового ввода
@@ -235,8 +241,9 @@ std::istream &operator>>(std::istream &in, Array &a)
 std::ostream &operator<<(std::ostream &out, Array &a)
 {
     for (int i = 0; i < a.len; i++)
-        std::cout << a.ptr[i]; // Вывод элементов массива
-    std::cout << std::endl;    // Перевод на новую строку
+        out << a.ptr[i] << " "; // Вывод элементов массива
+    out << std::endl;    // Перевод на новую строку
+    return out;
 }
 
 //Сортировка Шелла
@@ -258,57 +265,44 @@ void Array::Shell_sort()
 }
 
 
-void main()
-{
-    //Создание объекта без введенных парараметров
-    Array array_0_parametr;
-    std::cout <<"Array without parameters" << std::endl; 
-    std::cout << array_0_parametr; //Вывод массива без параметров
+int main() {
+    // Тест конструктора 1 (по параметрам, длине и диапазону значений)
+    Array array1(10, 1, 0, 100);  // Создаем массив длиной 10, случайного порядка, числа в диапазоне [0, 100]
+    std::cout << "Array1: " << array1 << std::endl;
 
-    size_t len_array = 0; //Длина массива 1 - с длиной массива
-    std::cout <<"Enter a size of array: ";
-    std::cin >>len_array; //Ввод длины массива 1
-    while (std::cin.fail()) // Цикл проверки корректности ввода длины массива
-    {
-        std::cerr << "Invalid input for array size." <<std::endl; // Вывод сообщения об ошибке в случае некорректного ввода
-        std::cin.clear();                                                                     // Сброс флагов ошибок во входном потоке
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');                   // Игнорирование оставшейся части строки до символа новой строки
-        std::cin >> len_array;                                                                      // Повторная попытка считывания длины массива
+    // Тест конструктора 2 (по массиву и длине массива)
+    int initialArray[5] = {5, 4, 3, 2, 1};
+    Array array2(initialArray, 5);  // Создаем массив на основе массива initialArray
+    std::cout << "Array2: " << array2 << std::endl;
+
+    // Тест конструктора копирования
+    Array array3(array2);  // Создаем копию массива array2
+    std::cout << "Array3 (copy of Array2): " << array3 << std::endl;
+
+    // Тест оператора присвоения
+    Array array4 = array1;  // Присваиваем массив array1 массиву array4
+    std::cout << "Array4 (assigned from Array1): " << array4 << std::endl;
+
+    // Тест оператора []
+    std::cout << "Element at index 2 of Array2: " << array2[2] << std::endl;
+
+    // Тест метода Test (проверка на упорядоченность)
+    if (array2.Test()) {
+        std::cout << "Array2 is ordered in non-decreasing order." << std::endl;
+    } else {
+        std::cout << "Array2 is not ordered in non-decreasing order." << std::endl;
     }
 
-    //Объект класса Array с 1 параметром - длиной массива
-    Array array_1_parameter_len(len_array);
-    std::cout <<"Array with parameter: length" << std::endl;
-    std::cout << array_1_parameter_len; //Вывод массива с параметрами: длина
+    // Тест оператора ==
+    if (array1 == array4) {
+        std::cout << "Array1 is equal to Array4." << std::endl;
+    } else {
+        std::cout << "Array1 is not equal to Array4." << std::endl;
+    }
 
-    //Объект класса Array с 2 параметрами - длиной, параметр порядка элемента (1 - рандомно)
-    Array array_2_parameter_len_order_1(len_array, 1);
-    std::cout <<"Array with parameters: length, order (random)" << std::endl;
-    std::cout << array_2_parameter_len_order_1; //Вывод массива с параметрами: длина, порядок (рандомо)
-    
-    //Объект класса Array с 2 параметрами - длиной, параметр порядка элемента (2 - не по убыванию)
-    Array array_2_parameter_len_order_2(len_array, 2);
-    std::cout <<"Array with parameters: length, order (by non - decreasing)" << std::endl;
-    std::cout << array_2_parameter_len_order_2; //Вывод массива с параметрами: длина, порядок (по неубыванию)
-    
-    //Объект класса Array с 2 параметрами - длиной, параметр порядка элемента (3 - не по возрастанию)
-    Array array_2_parameter_len_order_3(len_array, 3);
-    std::cout <<"Array with parameters: length, order (by non - growth)" << std::endl;
-    std::cout << array_2_parameter_len_order_3; //Вывод массива с параметрами: длина, порядок (по невозрастание)
-    
-    //Объект класса Array с 2 параметрами - длиной, параметр порядка элемента (остальные значения)
-    Array array_2_parameter_len_order_other(len_array, 5);
-    std::cout <<"Array with parameters: length, order (const)" << std::endl;
-    std::cout << array_2_parameter_len_order_other; //Вывод массива с параметрами: длина, порядок (постоянный)
+    // Тест сортировки Шелла
+    array2.Shell_sort();
+    std::cout << "Array2 after Shell sort: " << array2 << std::endl;
 
-    //Объект класса Array с 3 параметрами - длиной, параметр порядка элемента, начало диапазона чисел (отриц)
-    Array array_3_parameter_len_order_2_min_negative(len_array, 2, -100);
-    std::cout <<"Array with parameters: length, order (by non - decreasing), min (negative)" << std::endl;
-    std::cout << array_3_parameter_len_order_2_min_negative; //Вывод массива с параметрами: длина, порядок (2 - не по убыванию), минимум (отрицательный)
-
-    //Объект класса Array с 3 параметрами - длиной, параметр порядка элемента, начало диапазона чисел (полож)
-    Array array_3_parameter_len_order_2_min_positive(len_array, 2, 50);
-
-
-
+    return 0;
 }
