@@ -188,14 +188,13 @@ bool Array::operator==(Array a) {
 
     // Создаем копии обоих массивов, чтобы не менять оригинальные данные
     Array arr1(*this);
-    Array arr2(a);
 
     // Сортируем оба массива с использованием std::sort
     std::sort(arr1.ptr, arr1.ptr + len);
-    std::sort(arr2.ptr, arr2.ptr + len);
+    std::sort(a.ptr, a.ptr + len);
 
     for (int i = 0; i < len; i++) {
-        if (arr1[i] != arr2[i]) {
+        if (arr1[i] != a.ptr[i]) {
             return false;
         }
     }
