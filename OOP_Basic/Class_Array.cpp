@@ -186,19 +186,41 @@ bool Array::operator==(Array a) {
         return false;
     }
 
+    int i = 0;
+    while (i < a.len) {
+        bool found = false;
+        for (int j = 0; j < len; j++) {
+            if (a.ptr[i] == ptr[j]) {
+                a.ptr[i] = a.ptr[a.len - 1];
+                a.len--;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return false;
+        }
+        i++;
+    }
+
+    return true;
+
+
     // Создаем копии обоих массивов, чтобы не менять оригинальные данные
-    Array arr1(*this);
+    /*Array arr1(*this);
 
     // Сортируем оба массива с использованием std::sort
     std::sort(arr1.ptr, arr1.ptr + len);
     std::sort(a.ptr, a.ptr + len);
 
-    for (int i = 0; i < len; i++) {
-        if (arr1[i] != a.ptr[i]) {
+    for (int i = 0; i < len; i++)
+    {
+        if (arr1[i] != a.ptr[i])
+        {
             return false;
         }
     }
-    return true;
+    return true;*/
 }
 
 // Перегрузка операции потокового ввода
@@ -241,19 +263,19 @@ std::ostream &operator<<(std::ostream &out, Array &a)
 {
     for (int i = 0; i < a.len; i++)
         out << a.ptr[i] << " "; // Вывод элементов массива
-    out << std::endl;    // Перевод на новую строку
+    out << std::endl;           // Перевод на новую строку
     return out;
 }
 
-//Сортировка Шелла
+// Сортировка Шелла
 void Array::Shell_sort()
 {
     for (int gap = len / 2; gap > 0; gap /= 2) // Начальный проход по массиву с уменьшением gap
     {
         for (int i = gap; i < len; i++) // Перебор элементов, начиная с gap
         {
-            int temp = ptr[i]; // Сохранение текущего элемента во временной переменной temp
-            int j; // Индекс для перебора элементов внутри подмассива
+            int temp = ptr[i];                                     // Сохранение текущего элемента во временной переменной temp
+            int j;                                                 // Индекс для перебора элементов внутри подмассива
             for (j = i; j >= gap && ptr[j - gap] > temp; j -= gap) // Пока не найдено правильное место для temp
             {
                 ptr[j] = ptr[j - gap]; // Перемещение элементов на gap позиций вправо
@@ -263,39 +285,45 @@ void Array::Shell_sort()
     }
 }
 
-
-int main() {
+int main()
+{
     // Тест конструктора 1 (по параметрам, длине и диапазону значений)
-    Array array1(10, 1, 0, 100);  // Создаем массив длиной 10, случайного порядка, числа в диапазоне [0, 100]
+    Array array1(10, 1, 0, 100); // Создаем массив длиной 10, случайного порядка, числа в диапазоне [0, 100]
     std::cout << "Array1: " << array1 << std::endl;
 
     // Тест конструктора 2 (по массиву и длине массива)
     int initialArray[5] = {5, 4, 3, 2, 1};
-    Array array2(initialArray, 5);  // Создаем массив на основе массива initialArray
+    Array array2(initialArray, 5); // Создаем массив на основе массива initialArray
     std::cout << "Array2: " << array2 << std::endl;
 
     // Тест конструктора копирования
-    Array array3(array2);  // Создаем копию массива array2
+    Array array3(array2); // Создаем копию массива array2
     std::cout << "Array3 (copy of Array2): " << array3 << std::endl;
 
     // Тест оператора присвоения
-    Array array4 = array1;  // Присваиваем массив array1 массиву array4
+    Array array4 = array1; // Присваиваем массив array1 массиву array4
     std::cout << "Array4 (assigned from Array1): " << array4 << std::endl;
 
     // Тест оператора []
     std::cout << "Element at index 2 of Array2: " << array2[2] << std::endl;
 
     // Тест метода Test (проверка на упорядоченность)
-    if (array2.Test()) {
+    if (array2.Test())
+    {
         std::cout << "Array2 is ordered in non-decreasing order." << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "Array2 is not ordered in non-decreasing order." << std::endl;
     }
 
     // Тест оператора ==
-    if (array1 == array4) {
+    if (array1 == array4)
+    {
         std::cout << "Array1 is equal to Array4." << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "Array1 is not equal to Array4." << std::endl;
     }
 
