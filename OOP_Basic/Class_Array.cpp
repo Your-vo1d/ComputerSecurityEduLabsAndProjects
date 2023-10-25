@@ -181,30 +181,35 @@ bool Array::Test()
 }
 
 // Перегрузка для операции '=='
-bool Array::operator==(Array a) {
-    if (len != a.len) {
+bool Array::operator==(Array a)
+{
+    if (len != a.len)
+    {
         return false;
     }
 
     int i = 0;
-    while (i < a.len) {
+    while (i < a.len)
+    {
         bool found = false;
-        for (int j = 0; j < len; j++) {
-            if (a.ptr[i] == ptr[j]) {
+        for (int j = 0; j < len; j++)
+        {
+            if (a.ptr[i] == ptr[j])
+            {
                 a.ptr[i] = a.ptr[a.len - 1];
                 a.len--;
                 found = true;
                 break;
             }
         }
-        if (!found) {
+        if (!found)
+        {
             return false;
         }
         i++;
     }
 
     return true;
-
 
     // Создаем копии обоих массивов, чтобы не менять оригинальные данные
     /*Array arr1(*this);
@@ -270,21 +275,41 @@ std::ostream &operator<<(std::ostream &out, Array &a)
 // Сортировка Шелла
 void Array::Shell_sort()
 {
-    for (int gap = len / 2; gap > 0; gap /= 2) // Начальный проход по массиву с уменьшением gap
+    int n = len;
+    for (int gap = n / 2; gap > 0; gap /= 2)
     {
-        for (int i = gap; i < len; i++) // Перебор элементов, начиная с gap
+        for (int i = 0; i < n; i++)
         {
-            int temp = ptr[i];                                     // Сохранение текущего элемента во временной переменной temp
-            int j;                                                 // Индекс для перебора элементов внутри подмассива
-            for (j = i; j >= gap && ptr[j - gap] > temp; j -= gap) // Пока не найдено правильное место для temp
+            int temp = ptr[i];
+            int j;
+            for (j = i; j < len - gap; j += gap)
             {
-                ptr[j] = ptr[j - gap]; // Перемещение элементов на gap позиций вправо
+                if (ptr[j] < temp)
+                {
+                    ptr[i] = ptr[j + gap];
+                    ptr[j + gap] = temp;
+                }
+                else if (j > gap - 1 && ptr[j] < ptr[j - gap])
+                {
+                    int t = ptr[j - gap];
+                    ptr[j - gap] = ptr[j];
+                    ptr[j] = t;
+                }
             }
-            ptr[j] = temp; // Вставка temp на правильное место
         }
     }
 }
 
+
+
+//Пирамидальная сортировка
+void Array::Heapsort()
+{
+    //Проверка, что массив является пирамидой
+    for (int i = i < len/ 2 - 1; i++) {
+        if ()
+    }
+}
 int main()
 {
     // Тест конструктора 1 (по параметрам, длине и диапазону значений)
