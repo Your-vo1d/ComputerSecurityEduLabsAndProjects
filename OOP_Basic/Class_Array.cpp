@@ -38,7 +38,7 @@ public:
     void Hoar_sort();  // Быстрая сортировка
     void Bit_sort();   // Битовая сортировка
 
-    void Sifting(); // Вспомогательная фукция "просеивание"
+    void Sifting(int root, int size); // Вспомогательный метод просеивания для пирамидальной сортировки
 
     // Перегрузка операции потокового ввода
     friend std::istream &operator>>(std::istream &, Array &);
@@ -53,9 +53,9 @@ Array::Array(size_t len, int order, int min, int max)
     {
         if (min > max) // Проверка на корректность ввода границ диапазона чисел
         {
-            min = min ^ max;
-            max = min ^ max;
-            min = min ^ max;
+            int t = min;
+            min = max;
+            max = t;
         }
         // Выделение памяти под массив
         ptr = new int[len];
@@ -72,26 +72,18 @@ Array::Array(size_t len, int order, int min, int max)
             }
             else if (order == 2) // Если параметр = 2, то будет последовательность формируется по неубыванию
             {
-                for (int i = 0; i < len; i++)
+                ptr[0] = min + rand() % max; // Генерация 1-ого числа, которое >= минимального
+                for (int i = 1; i < len; i++)
                 {
-                    if (i == 0)
-                        ptr[i] = min + rand() % max; // Генерация 1-ого числа, которое >= минимального
-                    else
-                    {
-                        ptr[i] = ptr[i - 1] + rand() % max; // Генерация случайного числа, которое >= предыдущего
-                    }
+                    ptr[i] = ptr[i - 1] + rand() % max; // Генерация случайного числа, которое >= предыдущего
                 }
             }
             else if (order == 3) // Если параметр = 3, то будет последовательность формируется по невозрастанию
             {
+                ptr[0] = max - rand() % min; // Генерация 1-ого числа, которое <= максимального
                 for (int i = 0; i < len; i++)
                 {
-                    if (i == 0)
-                        ptr[i] = max - rand() % min; // Генерация 1-ого числа, которое <= максимального
-                    else
-                    {
-                        ptr[i] = ptr[i - 1] - rand() % min; // Генерация случайного числа, которое <= предыдущего
-                    }
+                    ptr[i] = ptr[i - 1] - rand() % min; // Генерация случайного числа, которое <= предыдущего
                 }
             }
             else // Если параметр другой, то последовательность состоит из 1 элемента (самого параметра)
@@ -212,7 +204,7 @@ bool Array::operator==(Array a)
     return true;
 
     // Создаем копии обоих массивов, чтобы не менять оригинальные данные
-    /*Array arr1(*this);
+    Array arr1(*this);
 
     // Сортируем оба массива с использованием std::sort
     std::sort(arr1.ptr, arr1.ptr + len);
@@ -225,7 +217,7 @@ bool Array::operator==(Array a)
             return false;
         }
     }
-    return true;*/
+    return true;
 }
 
 // Перегрузка операции потокового ввода
@@ -244,23 +236,26 @@ std::istream &operator>>(std::istream &in, Array &a)
         in >> len;                                                                      // Повторная попытка считывания длины массива
     }
 
-    a.len = len; // Присвоение длины массива объекту класса Array
-
-    for (size_t i = 0; i < len; ++i) // Цикл для ввода элементов массива
+    delete[] a.ptr;       // Освобождение памяти для массива
+    a.len = len;        // Изменение длины массива
+    a.ptr = new int[len]; // Выделение памяти для массива
+    if (a.ptr)
     {
-        std::cout << "Enter element " << i << ": "; // Сообщение-приглашение для ввода элемента
-        in >> a[i];                                 // Считывание значения элемента из входного потока
-
-        while (in.fail()) // Цикл проверки корректности ввода элемента
+        for (size_t i = 0; i < len; ++i) // Цикл для ввода элементов массива
         {
-            std::cerr << "Invalid input for element " << i << ". Please enter a valid value: "; // Вывод сообщения об ошибке в случае некорректного ввода элемента
-            in.clear();                                                                         // Сброс флагов ошибок во входном потоке
-            in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');                       // Игнорирование оставшейся части строки до символа новой строки
-            in >> a[i];                                                                         // Повторная попытка считывания элемента
-        }
-    }
+            std::cout << "Enter element " << i << ": "; // Сообщение-приглашение для ввода элемента
+            in >> a[i];                                 // Считывание значения элемента из входного потока
 
-    return in; // Возврат входного потока для поддержки цепочки операций ввода
+            while (in.fail()) // Цикл проверки корректности ввода элемента
+            {
+                std::cerr << "Invalid input for element " << i << ". Please enter a valid value: "; // Вывод сообщения об ошибке в случае некорректного ввода элемента
+                in.clear();                                                                         // Сброс флагов ошибок во входном потоке
+                in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');                       // Игнорирование оставшейся части строки до символа новой строки
+                in >> a[i];                                                                         // Повторная попытка считывания элемента
+            }
+        }
+        return in; // Возврат входного потока для поддержки цепочки операций ввода
+    }
 }
 
 // Перегрузка операции потокового выводаы
@@ -300,16 +295,50 @@ void Array::Shell_sort()
     }
 }
 
-
-
-//Пирамидальная сортировка
-void Array::Heapsort()
+// Вспомогательный метод просеивания для пирамидальной сортировки
+void Array::Sifting(int root, int size)
 {
-    //Проверка, что массив является пирамидой
-    for (int i = i < len/ 2 - 1; i++) {
-        if ()
+    int largest = root;
+    int left = 2 * root + 1;
+    int right = 2 * root + 2;
+
+    // Находим наибольший элемент среди корня, левого и правого потомка
+    if (left < size && ptr[left] > ptr[largest])
+    {
+        largest = left;
+    }
+
+    if (right < size && ptr[right] > ptr[largest])
+    {
+        largest = right;
+    }
+
+    // Если наибольший элемент не корень, меняем местами с корнем и рекурсивно просеиваем поддерево
+    if (largest != root)
+    {
+        std::swap(ptr[root], ptr[largest]);
+        Sifting(largest, size);
     }
 }
+
+// Пирамидальная сортировка
+void Array::Heapsort()
+{
+    // Построение начальной пирамиды (первоначальная упорядоченность)
+    for (int i = len / 2 - 1; i >= 0; i--)
+    {
+        Sifting(i, len);
+    }
+
+    // Сортировка
+    for (int i = len - 1; i > 0; i--)
+    {
+        // Обмен значениями корня и последнего элемента
+        std::swap(ptr[0], ptr[i]);
+        Sifting(0, i);
+    }
+}
+
 int main()
 {
     // Тест конструктора 1 (по параметрам, длине и диапазону значений)
@@ -352,9 +381,17 @@ int main()
         std::cout << "Array1 is not equal to Array4." << std::endl;
     }
 
+    // Проверка перегрузки потокового ввода массива
+    Array array5;
+    std::cout << "Enter a array5" << std::endl;
+    std::cin >> array5;
+    std::cout << "Array5: " << array5 << std::endl;
+
     // Тест сортировки Шелла
     array2.Shell_sort();
     std::cout << "Array2 after Shell sort: " << array2 << std::endl;
 
+    array4.Heapsort();
+    std::cout << "Array4 after Heapsort: " << array4 << std::endl;
     return 0;
 }
