@@ -66,8 +66,42 @@ def compress(text, output_filename):
         compressed_file.write(bytes_array)
 
     print(f'Сжатие завершено. Результат записан в файл {output_filename}')
-    
-    
+
+def decompress(input_filename, output_filename):
+    # Распаковка сжатого файла
+    with open(input_filename, 'rb') as compressed_file:
+        bytes_array = compressed_file.read()
+
+    # Преобразование байтов в двоичную строку
+    encoded_text = ''.join(format(byte, '08b') for byte in bytes_array)
+
+    # Извлечение информации
+    padding = int(encoded_text[:8], 2)
+    encoded_text = encoded_text[8:-padding]
+
+    # Восстановление дерева Хаффмана
+    node = build_huffman_tree("")
+    current_node = node
+
+    # Раскодирование текста
+    decoded_text = ""
+    for bit in encoded_text:
+        if bit == '0':
+            current_node = current_node.left
+        else:
+            current_node = current_node.right
+
+        if current_node.char is not None:
+            decoded_text += current_node.char
+            current_node = node
+
+    # Запись раскодированного текста в файл
+    with open(output_filename, 'w', encoding='utf-8') as decompressed_file:
+        decompressed_file.write(decoded_text)
+
+    print(f'Распаковка завершена. Результат записан в файл {output_filename}')
+
+
 input_file = 'input.txt' #Исходный файл с текстом
 compressed_file = 'compressed.bin' #Результат сжатия файла
 decompressed_file = 'decompressed.txt'  # Результат декомпрессии файла (получение исходного текста)
