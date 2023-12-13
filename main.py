@@ -66,3 +66,11 @@ def compress(text, output_filename):
         compressed_file.write(bytes_array)
 
     print(f'Сжатие завершено. Результат записан в файл {output_filename}')
+    
+    
+input_file = 'input.txt' #Исходный файл с текстом
+compressed_file = 'compressed.bin' #Результат сжатия файла
+decompressed_file = 'decompressed.txt'  # Результат декомпрессии файла (получение исходного текста)
+
+with open(input_file, 'r', encoding='utf-8') as file:
+    text = file.read()
