@@ -1,36 +1,22 @@
 import heapq
 
-class HuffmanNode:
-    def __init__(self, char, frequency):
-        # Инициализация узла Хаффмана с символом и частотой
-        self.char = char #Символ узла
-        self.frequency = frequency #Частота появления символа в тексте
-        self.left = None #Левый потомок в дереве
-        self.right = None #Правый потомок в дереве
-
-    def __lt__(self, other):
-        # Метод сравнения для сортировки узлов в куче
-        return self.frequency < other.frequency
 
 def build_huffman_tree(text):
-    # Построение дерева Хаффмана на основе частот символов в тексте
     frequency_map = {}
     for char in text:
         frequency_map[char] = frequency_map.get(char, 0) + 1
 
-    # Инициализация кучи с узлами Хаффмана
-    heap = [HuffmanNode(char, freq) for char, freq in frequency_map.items()]
+    heap = [(freq, char, None, None) for char, freq in frequency_map.items()]
     heapq.heapify(heap)
 
-    # Слияние узлов до построения полного дерева
     while len(heap) > 1:
         left = heapq.heappop(heap)
         right = heapq.heappop(heap)
-        merged = HuffmanNode(None, left.frequency + right.frequency)
-        merged.left, merged.right = left, right
+        merged = (left[0] + right[0], '', left, right)
         heapq.heappush(heap, merged)
 
-    return heap[0]
+    return heap[0] if heap else (0, '', None, None)
+
 
 def build_huffman_codes(node, code="", mapping=None):
     # Рекурсивное построение кодов Хаффмана для каждого символа
@@ -45,66 +31,76 @@ def build_huffman_codes(node, code="", mapping=None):
 
     return mapping
 
+
 def compress(text, output_filename):
-    # Сжатие текста методом Хаффмана
+    # Построение дерева Хаффмана на основе входного текста
     root = build_huffman_tree(text)
+
+    # Построение кодов Хаффмана для каждого символа
     codes = build_huffman_codes(root)
 
-    # Кодирование текста
+    # Создание закодированного текста на основе полученных кодов
     encoded_text = ''.join(codes[char] for char in text)
+
+    # Вычисление количества бит для дополнения до байта
     padding = 8 - len(encoded_text) % 8
-    encoded_text += '0' * padding
 
-    # Преобразование строки из 0 и 1 в символы ASCII
-    ascii_characters = [chr(int(encoded_text[i:i+8], 2)) for i in range(0, len(encoded_text), 8)]
+    # Добавление дополнительных нулей для выравнивания по байту, если необходимо
+    if padding != 8:
+        encoded_text += '0' * padding
 
-    # Запись в текстовый файл
-    with open(output_filename, 'w', encoding='utf-8') as compressed_file:
-        compressed_file.write(''.join(ascii_characters))
+    # Запись информации о дополнении в начало сжатого файла
+    with open(output_filename, 'wb') as compressed_file:
+        compressed_file.write(bytes([padding]))
 
+        # Запись закодированного текста в файл
+        for i in range(0, len(encoded_text), 8):
+            byte = encoded_text[i:i+8]
+            byte = int(byte, 2)
+            compressed_file.write(bytes([byte]))
+
+    # Вывод сообщения об успешном завершении сжатия
     print(f'Сжатие завершено. Результат записан в файл {output_filename}')
 
-def decompress(input_filename, output_filename):
-    # Распаковка сжатого файла
+
+def decompress(input_filename, output_filename, huffman_tree):
     with open(input_filename, 'rb') as compressed_file:
+
+        padding = ord(compressed_file.read(1))
+
         bytes_array = compressed_file.read()
 
-    # Преобразование байтов в двоичную строку
     encoded_text = ''.join(format(byte, '08b') for byte in bytes_array)
 
-    # Извлечение информации
-    padding = int(encoded_text[:8], 2)
-    encoded_text = encoded_text[8:-padding]
+    encoded_text = encoded_text[:-padding]
 
-    # Восстановление дерева Хаффмана
-    node = build_huffman_tree("")
+    node = huffman_tree
     current_node = node
 
-    # Раскодирование текста
     decoded_text = ""
     for bit in encoded_text:
         if bit == '0':
-            current_node = current_node.left
+            current_node = current_node[2]
         else:
-            current_node = current_node.right
+            current_node = current_node[3]
 
-        if current_node.char is not None:
-            decoded_text += current_node.char
-            current_node = node
+        if current_node[1] != '':
+            decoded_text += current_node[1]
+            current_node = huffman_tree
 
-    # Запись раскодированного текста в файл
     with open(output_filename, 'w', encoding='utf-8') as decompressed_file:
         decompressed_file.write(decoded_text)
 
     print(f'Распаковка завершена. Результат записан в файл {output_filename}')
 
 
-input_file = 'input.txt' #Исходный файл с текстом
-compressed_file = 'compressed.txt' #Результат сжатия файла
-decompressed_file = 'decompressed.txt'  # Результат декомпрессии файла (получение исходного текста)
+input_file = 'input.txt'
+compressed_file = 'compressed.txt'
+decompressed_file = 'decompressed.txt'
 
 with open(input_file, 'r', encoding='utf-8') as file:
     text = file.read()
 
+root = build_huffman_tree(text)
 compress(text, compressed_file)
-decompress(compressed_file, decompressed_file)
+decompress(compressed_file, decompressed_file, root)
