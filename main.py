@@ -55,9 +55,12 @@ def compress(text, output_filename):
     padding = 8 - len(encoded_text) % 8
     encoded_text += '0' * padding
 
+    # Преобразование строки из 0 и 1 в символы ASCII
+    ascii_characters = [chr(int(encoded_text[i:i+8], 2)) for i in range(0, len(encoded_text), 8)]
+
     # Запись в текстовый файл
     with open(output_filename, 'w', encoding='utf-8') as compressed_file:
-        compressed_file.write(encoded_text)
+        compressed_file.write(''.join(ascii_characters))
 
     print(f'Сжатие завершено. Результат записан в файл {output_filename}')
 
@@ -97,7 +100,7 @@ def decompress(input_filename, output_filename):
 
 
 input_file = 'input.txt' #Исходный файл с текстом
-compressed_file = 'compressed.bin' #Результат сжатия файла
+compressed_file = 'compressed.txt' #Результат сжатия файла
 decompressed_file = 'decompressed.txt'  # Результат декомпрессии файла (получение исходного текста)
 
 with open(input_file, 'r', encoding='utf-8') as file:
