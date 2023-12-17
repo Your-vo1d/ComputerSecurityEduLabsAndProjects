@@ -55,15 +55,9 @@ def compress(text, output_filename):
     padding = 8 - len(encoded_text) % 8
     encoded_text += '0' * padding
 
-    # Конвертация в байты
-    bytes_array = bytearray()
-    for i in range(0, len(encoded_text), 8):
-        byte = int(encoded_text[i:i + 8], 2)
-        bytes_array.append(byte)
-
-    # Запись в бинарный файл
-    with open(output_filename, 'wb') as compressed_file:
-        compressed_file.write(bytes_array)
+    # Запись в текстовый файл
+    with open(output_filename, 'w', encoding='utf-8') as compressed_file:
+        compressed_file.write(encoded_text)
 
     print(f'Сжатие завершено. Результат записан в файл {output_filename}')
 
@@ -108,3 +102,6 @@ decompressed_file = 'decompressed.txt'  # Результат декомпрес�
 
 with open(input_file, 'r', encoding='utf-8') as file:
     text = file.read()
+
+compress(text, compressed_file)
+decompress(compressed_file, decompressed_file)
