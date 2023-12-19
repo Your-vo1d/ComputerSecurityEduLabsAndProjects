@@ -168,6 +168,9 @@ decompressed_file = 'decompressed.txt'
 with open(input_file, 'r', encoding='utf-8') as file:
     text = file.read()
 
+with open("text_test.txt", 'r', encoding='utf-8') as file:
+    text_test = file.read()
+
 # Построение дерева Хаффмана на основе текста
 root = build_huffman_tree(text)
 
@@ -176,3 +179,4 @@ compress(text, compressed_file)
 
 # Распаковка сжатого текста и запись результата в файл decompressed.txt
 decompress(compressed_file, decompressed_file)
+decompress("test.txt", "result_test.txt")
