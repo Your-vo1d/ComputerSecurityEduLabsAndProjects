@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <time.h>
-
+#include <iomanip>
 #include <cstring>
 #include <iostream>
 
 typedef unsigned char BASE;
 
 #define BASE_SIZE (sizeof(BASE) * 8)
+
 using namespace std;
 
 class Big_Number
@@ -44,30 +45,8 @@ public:
 // Конструктор по умолчанию/параметрам
 Big_Number::Big_Number(int ml, int p)
 {
-	if (ml == 1)
-	{					  // Проверка параметра максимальной длины
-		this->maxlen = 1; // Инициализация количества байт для числа
-		this->len = 1;	  // Инициализация количества цифр числа
 
-		coef = new BASE[1]; // Выделение динамической памяти
-		if (coef)
-		{ // Проверка выделения памяти
-			if (p == 1)
-			{ // Инциализация числа нулем
-				srand(time(NULL));
-				coef[0] = rand() % BASE_SIZE;
-			}
-			else
-			{
-				coef[0] = 0;
-			}
-		}
-		else
-		{			 // Иначе выход из программы
-			exit(1); // Выход из программы
-		}
-	}
-	else if (ml < 1)
+	if (ml < 1)
 	{
 		exit(1);
 	}
@@ -86,10 +65,9 @@ Big_Number::Big_Number(int ml, int p)
 				this->len = 1; // Инициализация количества цифр числа
 			}
 			else
-			{					   // Иначе заполняем рандомными цифрами
-				srand(time(NULL)); // ПОСМОТРЕТЬ ДРУГУЮ РЕАЛИЗАЦИЮ
+			{	// Иначе заполняем рандомными цифрами
 				for (int i = 0; i < ml; i++)
-					coef[i] = rand() % BASE_SIZE; //ИСПРАВИТЬ
+					coef[i] = rand() % 256; //ИСПРАВИТ
 				int i = len - 1;
 				while (i > 0 && coef[i] == 0)
 					len--;
@@ -244,51 +222,54 @@ bool Big_Number::operator<=(const Big_Number &bn)
 // Ввод большого числа в 16-ом виде
 bool Big_Number::input_hex()
 {
-	char buf[128]; // Буфер для строки - числа
+    char buf[128]; // Буфер для строки - числа
 
-	cin >> buf;									   // Ввод строки
-	len = (strlen(buf) - 1) / (BASE_SIZE / 4) + 1; // Подсчет длины
-	char tmp;	
-	maxlen = len;								   // Временная переменная, в которой хранится само число
-	BASE *copy_coef = coef;						   // Храним текущие цифры. Если не удается перевести в 10-ую систему, то возвращаем прошлые цифры числа
-	size_t index_Big_Number = 0;				   // Индекс по цифрам большого числа
-	size_t offset = 0;
-	BASE *coefd = new BASE[maxlen];
-	if (coef) {							   // Смещение
-	for (int index_str = strlen(buf) - 1; index_str >= 0; index_str--)
-	{
-		if ('0' <= buf[index_str] && buf[index_str] <= '9') // Если символ - цифра, то преобразуем его в число
-		{
-			tmp = buf[index_str] - '0';
-		}
-		else if ('a' <= buf[index_str] && buf[index_str] <= 'f') // Если символ - цифра 16-ой системы, то преобразуем его в число
-		{
-			tmp = buf[index_str] - 'a' + 10;
-		}
-		else if ('A' <= buf[index_str] && buf[index_str] <= 'F') // Если символ - цифра 16-ой системы, то преобразуем его в число
-		{
-			tmp = buf[index_str] - 'A' + 10;
-		}
-		else // Иначе возвращаем предыдущие цифры и возвращаем false
-		{
-			coef = copy_coef;
-			return false;
-		}
-		coefd[index_Big_Number] |= tmp << (offset * 4); // Записываем число, смещая его на коэф. * 4 (преобразование в 10 число)
-		offset++;
-		if (offset >= BASE_SIZE / 4) // Конец текущей цифры
-		{
-			offset = 0;
-			index_Big_Number++;
-		}
-	}
-	coef = coefd;
-	cout << coef[0]<<"Fdsf" <<endl;
-	return true;
-	}
-	return false;
+    std::cin >> buf;                                       // Ввод строки
+    len = (strlen(buf) - 1) / (BASE_SIZE / 4) + 1;         // Подсчет длины
+    size_t index_Big_Number = 0;
+	delete coef;
+	coef = NULL;                         // Индекс по цифрам большого числа
+	coef = new BASE[len]; 
+	for (int i = 0; i < maxlen; i++)
+	coef[i] = 0;                           // Динамический массив для коэффициентов
+    int offset = 0;
+    int tmp = 0;
+
+    for (int index_str = strlen(buf) - 1; index_str >= 0; index_str--)
+    {
+        if ('0' <= buf[index_str] && buf[index_str] <= '9') // Если символ - цифра, то преобразуем его в число
+        {
+            tmp = buf[index_str] - '0';
+        }
+        else if ('a' <= buf[index_str] && buf[index_str] <= 'f') // Если символ - цифра 16-ой системы, то преобразуем его в число
+        {
+            tmp = buf[index_str] - 'a' + 10;
+        }
+        else if ('A' <= buf[index_str] && buf[index_str] <= 'F') // Если символ - цифра 16-ой системы, то преобразуем его в число
+        {
+            tmp = buf[index_str] - 'A' + 10;
+        }
+        else // Иначе возвращаем false
+        {
+            delete[] coef;
+            return false;
+        }
+		cout <<"TMP - " <<tmp <<endl;			
+		cout<<"dfsdsa"<<endl;
+			for (int i = len - 1; i >=0; i--)
+		cout<<coef[i];			
+		cout<<"qwer"<<endl;
+        coef[index_Big_Number] |= tmp << (offset * 4); // Записываем число, смещая его на коэф. * 4 (преобразование в 10 число)
+        offset++;
+        if (offset >= BASE_SIZE / 4) // Конец текущей цифры
+        {
+            offset = 0;
+            index_Big_Number++;
+        }
+    }
+    return true;
 }
-
+// Вывод в 16-ой системе
 // Вывод в 16-ой системе
 void Big_Number::output_hex()
 {
@@ -319,8 +300,6 @@ void Big_Number::output_hex()
 	cout <<endl;
 }
 
-
-
 int main()
 {
 	Big_Number bn_1(1);
@@ -338,6 +317,12 @@ int main()
 	Big_Number bn_4(4);
 	cout << "Big number created by the default constructor (without parameters)" << endl;
 	bn_4.output_hex();
+
+	Big_Number bn_5(2);
+	if (bn_5.input_hex()) {
+		cout<<"HEX";
+		bn_5.output_hex();
+	}
 
 	if (bn_1 == bn_3) {
 		cout<<"YES";
@@ -365,8 +350,4 @@ int main()
 		cout<<"NO";
 
 
-	Big_Number bn_5(4);
-	if (bn_5.input_hex()) {
-		bn_5.output_hex();
-	}
 }

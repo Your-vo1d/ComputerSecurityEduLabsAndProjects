@@ -1,0 +1,4 @@
+﻿  ConsoleApplication1.cpp
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Magic_Square\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(228,44): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Magic_Square\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(236,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  ConsoleApplication1.vcxproj -> C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Magic_Square\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe

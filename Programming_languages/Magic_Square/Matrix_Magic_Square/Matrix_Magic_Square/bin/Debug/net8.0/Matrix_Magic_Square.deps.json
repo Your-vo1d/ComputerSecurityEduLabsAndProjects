@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Matrix_Magic_Square/1.0.0": {
+        "runtime": {
+          "Matrix_Magic_Square.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Matrix_Magic_Square/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

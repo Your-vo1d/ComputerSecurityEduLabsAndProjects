@@ -77,7 +77,9 @@ class Program
                 }
             }
         }
-        return true;
+        if (stack.Count() == 0)
+            return true;
+    return false;
     }
 
     static string RemoveDigits(string input)
