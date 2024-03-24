@@ -1,10 +1,11 @@
 #include <stdlib.h>
-#include <time.h>
 #include <iomanip>
 #include <cstring>
 #include <iostream>
-
+#include <random>
 typedef unsigned char BASE;
+
+typedef unsigned short int DBASE;
 
 #define BASE_SIZE (sizeof(BASE) * 8)
 
@@ -14,24 +15,23 @@ class Big_Number
 {
 	int len;	// Разряд
 	int maxlen; // Выделенная память
-	BASE *coef;
+	BASE *coef; // Массив цифр
 
 public:
 	Big_Number(int ml = 1, int pr = 0); // Конструктор по умолчанию/параметрам
 	Big_Number(const Big_Number &bn);	// Конструктор копирования
-	~Big_Number()
+	~Big_Number() // Деструктор
 	{
-		if (coef)
+		if (coef) //Проверка указателя
 			delete[] coef;
 		coef = NULL;
 		len = 0;
 		maxlen = 0;
 	};
 	; // Деструктор
-	Big_Number operator=(
-		const Big_Number &bn); // Перегрузка оператора присвоения
+	Big_Number operator=( const Big_Number &bn); // Перегрузка оператора присвоения
 
-	bool input_hex();  // Ввод большого числа в 16-ом виде
+	void input_hex();  // Ввод большого числа в 16-ом виде
 	void output_hex(); // Вывод большого числа в 16-ом виде
 
 	bool operator==(const Big_Number &bn); // Перегрузка оператора ==
@@ -40,42 +40,50 @@ public:
 	bool operator<=(const Big_Number &bn); // Перегрузка оператора <=
 	bool operator>(const Big_Number &bn);  // Перегрузка оператора >
 	bool operator>=(const Big_Number &bn); // Перегрузка оператора >=
+
+	Big_Number operator+(const Big_Number &bn);
+	Big_Number operator+=(const Big_Number &bn);
+	Big_Number operator-(const Big_Number &bn);
 };
 
 // Конструктор по умолчанию/параметрам
 Big_Number::Big_Number(int ml, int p)
 {
+    if (ml < 1)
+    {
+        exit(1);
+    }
+    else
+    {
+        // Максимальное количество байт > 0
+        this->maxlen = ml; // Инициализация количества байт для числа
+        this->len = ml;
+        coef = new BASE[ml]; // Выделение динамической памяти
 
-	if (ml < 1)
-	{
-		exit(1);
-	}
-	else
-	{
-		// Максимальное количество байт > 0
-		this->maxlen = ml; // Инициализация количества байт для числа
-		this->len = ml;
-		coef = new BASE[ml]; // Выделение динамической памяти
-		if (coef)
-		{ // Проверка выделения памяти
-			if (p == 0)
-			{ // Если параметр 0, то заполняем все цифры 0
-				for (int i = 0; i < ml; i++)
-					coef[i] = 0;
-				this->len = 1; // Инициализация количества цифр числа
-			}
-			else
-			{	// Иначе заполняем рандомными цифрами
-				for (int i = 0; i < ml; i++)
-					coef[i] = rand() % 256; //ИСПРАВИТ
-				int i = len - 1;
+        if (coef)
+        { // Проверка выделения памяти
+            if (p == 0)
+            { // Если параметр 0, то заполняем все цифры 0
+                for (int i = 0; i < ml; i++)
+                    coef[i] = 0;
+                this->len = 1; // Инициализация количества цифр числа
+            }
+            else
+            { // Иначе заполняем рандомными цифрами
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<BASE> dis(0, std::numeric_limits<BASE>::max());
+
+                for (int i = 0; i < ml; i++)
+                    coef[i] = dis(gen); // Генерация случайного числа
+				int i = this->len - 1;
 				while (i > 0 && coef[i] == 0)
-					len--;
-			}
-		}
-	}
-}
+					this->len--;
+            }
 
+        }
+    }
+}
 // Конструктор копирования
 Big_Number::Big_Number(const Big_Number &bn)
 {
@@ -125,16 +133,17 @@ bool Big_Number::operator==(const Big_Number &bn)
 		return true;
 	}
 
-	if (this->len != bn.len) // Проверка на длину (если количество цифр не одно и
+	if (len != bn.len) // Проверка на длину (если количество цифр не одно и
 		// то же, то числа разные)
 		return false;
 
-	for (size_t i = len - 1; i >= 0;
+	for (int i = len - 1; i >= 0;
 		 i--)
 	{ // Проход по всем цифрам числа, если хотя бы одно не сходится, то
 		// они не равны
-		if (coef[i] != bn.coef[i])
+		if (this->coef[i] != bn.coef[i]){
 			return false;
+		}
 	}
 	return true;
 }
@@ -145,10 +154,10 @@ bool Big_Number::operator!=(const Big_Number &bn)
 	{ // Проверка на сравнение самим с собой
 		return false;
 	}
-	if (this->len != bn.len) // Проверка на длину (если количество цифр не одно и
+	if (len != bn.len) // Проверка на длину (если количество цифр не одно и
 		// то же, то числа разные)
 		return true;
-	for (size_t i = len - 1; i >= 0;
+	for (int i = len - 1; i >= 0;
 		 i--)
 	{ // Проход по всем цифрам числа, если хотя бы одно не сходится, то
 		// они не равны
@@ -169,10 +178,13 @@ bool Big_Number::operator>(const Big_Number &bn)
 	for (size_t i = len - 1; i >= 0;
 		 i--)
 	{ // Проход по всем цифрам числа, если хотя бы одно меньше, то ложь
-		if (coef[i] < bn.coef[i] || (i == 0 && coef[i] == bn.coef[i]))
-			return false;
+	if (coef[i] > bn.coef[i]){
+		return true;
 	}
-	return true;
+	if (coef[i] < bn.coef[i])
+		return false;
+	}
+	return false;
 }
 // Перегрузка оператора больше или равно
 bool Big_Number::operator>=(const Big_Number &bn)
@@ -196,12 +208,17 @@ bool Big_Number::operator<(const Big_Number &bn)
 		return false;
 	if (this->len < bn.len) // Если длина текущего меньше
 		return true;
-	for (size_t i = len - 1; i >= 0; i--) // Проходимся по всем цифрам с начала (в coef записывали наоборот)
+	for (int i = len - 1; i >= 0; i--) // Проходимся по всем цифрам с начала (в coef записывали наоборот)
 	{
-		if (coef[i] > bn.coef[i] || (i == 0 && coef[i] == bn.coef[i])) // Если одна из цифр больше или конечные цифры равны, то ложь
-			return false;
+			if (coef[i] > bn.coef[i]){
+			{
+				return false;
+			}
+			if (coef[i] < bn.coef[i])
+				return true;
 	}
-	return true;
+	}
+	return false;
 }
 // Перегрузка оператора <=
 bool Big_Number::operator<=(const Big_Number &bn)
@@ -219,135 +236,204 @@ bool Big_Number::operator<=(const Big_Number &bn)
 	return true;
 }
 
+
+
 // Ввод большого числа в 16-ом виде
-bool Big_Number::input_hex()
+void Big_Number::input_hex()
 {
-    char buf[128]; // Буфер для строки - числа
+	bool flag = false;
+	do
+	{
+		flag = false;
+		char buf[128]; // Буфер для строки - числа
+		std::cin >> buf; // Ввод строки
+		int buf_len = strlen(buf); // Длина введенной строки
+		len =(buf_len - 1)/(BASE_SIZE / 4) + 1; // Подсчет длины числа
+		delete[] coef; // Очистка памяти
+		coef = new BASE[len]; // Выделение памяти под коэффициенты
+		// Инициализация коэффициентов нулями
+		for (int i = 0; i < len; ++i)
+			coef[i] = 0;
 
-    std::cin >> buf;                                       // Ввод строки
-    len = (strlen(buf) - 1) / (BASE_SIZE / 4) + 1;         // Подсчет длины
-    size_t index_Big_Number = 0;
-	delete coef;
-	coef = NULL;                         // Индекс по цифрам большого числа
-	coef = new BASE[len]; 
-	for (int i = 0; i < maxlen; i++)
-	coef[i] = 0;                           // Динамический массив для коэффициентов
-    int offset = 0;
-    int tmp = 0;
+		int coef_index = 0; // Индекс текущего коэффициента
+		int shift = 0; // Смещение в текущем коэффициенте
 
-    for (int index_str = strlen(buf) - 1; index_str >= 0; index_str--)
-    {
-        if ('0' <= buf[index_str] && buf[index_str] <= '9') // Если символ - цифра, то преобразуем его в число
-        {
-            tmp = buf[index_str] - '0';
-        }
-        else if ('a' <= buf[index_str] && buf[index_str] <= 'f') // Если символ - цифра 16-ой системы, то преобразуем его в число
-        {
-            tmp = buf[index_str] - 'a' + 10;
-        }
-        else if ('A' <= buf[index_str] && buf[index_str] <= 'F') // Если символ - цифра 16-ой системы, то преобразуем его в число
-        {
-            tmp = buf[index_str] - 'A' + 10;
-        }
-        else // Иначе возвращаем false
-        {
-            delete[] coef;
-            return false;
-        }
-		cout <<"TMP - " <<tmp <<endl;			
-		cout<<"dfsdsa"<<endl;
-			for (int i = len - 1; i >=0; i--)
-		cout<<coef[i];			
-		cout<<"qwer"<<endl;
-        coef[index_Big_Number] |= tmp << (offset * 4); // Записываем число, смещая его на коэф. * 4 (преобразование в 10 число)
-        offset++;
-        if (offset >= BASE_SIZE / 4) // Конец текущей цифры
-        {
-            offset = 0;
-            index_Big_Number++;
-        }
-    }
-    return true;
+		// Обработка символов в обратном порядке
+		for (int i = buf_len - 1; i >= 0; --i)
+		{
+			char ch = buf[i];
+			int value = 0;
+			if ('0' <= ch && ch <= '9') // Преобразование цифры в число
+				value = ch - '0';
+			else if ('a' <= ch && ch <= 'f') // Преобразование шестнадцатеричной цифры в число
+				value = ch - 'a' + 10;
+			else if ('A' <= ch && ch <= 'F') // Преобразование шестнадцатеричной цифры в число
+				value = ch - 'A' + 10;
+			else // Некорректный символ
+			{
+				cout <<"Invalid error. Enter a number: ";
+				flag = true;
+				break;
+			}
+
+			// Запись значения в текущий коэффициент
+			coef[coef_index] |= value << shift;
+
+			// Переход к следующему коэффициенту или смещение
+			shift += 4;
+			if (shift >= BASE_SIZE) // Если достигнут конец текущего коэффициента
+			{
+				shift = 0;
+				++coef_index;
+			}
+		}
+	
+	}while (flag);
+	int i = len - 1;
+	while (i > 0 && coef[i] == 0)
+		len--;
 }
-// Вывод в 16-ой системе
+
+
 // Вывод в 16-ой системе
 void Big_Number::output_hex()
 {
-	char *result = new char[len * 2];
-	int k = BASE_SIZE - 4;
-	int i = 0;
-	int j = len - 1;
-	while (j >= 0) {
-		char tmp = ((coef[j] >>k) & (0xf));
-		if (tmp < 10 && tmp >= 0)
-		{
-			result[i] = (char)(tmp + '0');
-		}
-		else if (tmp < 16 && tmp >= 10)
-		{
-			result[i]= (char)(tmp + 'a' - 10);
-		}
-		i++;
-		k -=4;
-		if (k < 0) {
-			k = BASE_SIZE - 4;
-			j--;
-		}
-	}
-	for (int i = 0; i < len; i++) {
-		cout <<result[i];
-	}
-	cout <<endl;
+    bool non_zero_found = false; // Флаг, указывающий, была ли найдена ненулевая цифра
+
+    int k = BASE_SIZE - 4; // для смещения коэффициента
+    int j = len - 1;
+
+    while (j >= 0)
+    {
+        unsigned char tmp = (coef[j] >> k) & 0xf;
+
+        if (tmp != 0 || non_zero_found) {
+            // Если текущая цифра не ноль или уже была найдена ненулевая цифра,
+            // то выводим текущую цифру
+            non_zero_found = true; // Устанавливаем флаг
+            if (0 <= tmp && tmp <= 9)
+                std::cout << (char)(tmp + '0');
+            else if (10 <= tmp && tmp <= 15)
+                std::cout << (char)(tmp - 10 + 'a');
+        }
+
+        k -= 4;
+
+        if (k < 0) // Если смещение стало отрицательным, сбросить его и перейти к предыдущему коэффициенту
+        {
+            k = BASE_SIZE - 4;
+            j--;
+        }
+    }
+    if (!non_zero_found) // Если ненулевая цифра не была найдена, значит число ноль, вывести "0"
+        std::cout << '0';
+
+    std::cout << std::endl;
 }
+
+// Перегрузка оператора сложения +
+// Перегрузка оператора сложения +
+Big_Number Big_Number::operator+(const Big_Number &bn) {
+    // Определение длин чисел
+    int n = this->len;
+    int m = bn.len;
+    int max_len = std::max(n, m) + 1; // учитываем дополнительный разряд для переноса
+
+    // Создание объекта для результата
+    Big_Number result(max_len);
+
+    // Инициализация переменной для переноса
+    DBASE carry = 0;
+
+    // Сложение разрядов
+    for (int j = 0; j < max_len; ++j) {
+        // Получение текущих цифр из двух чисел и при необходимости переноса
+        DBASE uj = (j < n ? this->coef[j] : 0);
+        DBASE vj = (j < m ? bn.coef[j] : 0);
+
+        // Сложение текущих цифр с учетом переноса
+        DBASE tmp = uj + vj + carry;
+
+        // Присваивание результату текущего разряда
+        result.coef[j] = tmp & std::numeric_limits<BASE>::max();
+
+        // Обновление значения переноса
+        carry = tmp >> BASE_SIZE;
+    }
+
+    // Устанавливаем длину результата
+    result.len = max_len;
+
+    return result;
+}
+
+
 
 int main()
 {
 	Big_Number bn_1(1);
-	cout << "Big number created by the constructor with parameter ml = 1" << endl;
+	cout << "Big number bn_1 created by the constructor with parameter ml = 1: ";
 	bn_1.output_hex();
+	cout << endl;
 
 	Big_Number bn_2(4, 1);
-	cout << "Big number created by the constructor with parameters ml = 4, p = 1 (max length 4, random digits)" << endl;
+	cout << "Big number bn_2 created by the constructor with parameters ml = 4, p = 1 (max length 4, random digits): ";
 	bn_2.output_hex();
+	cout << endl;
 
 	Big_Number bn_3(4);
-	cout << "Big number created by the constructor with parameter ml = 4 (max length 4)" << endl;
+	cout << "Big number bn_3 created by the constructor with parameter ml = 4 (max length 4): ";
 	bn_3.output_hex();
-
-	Big_Number bn_4(4);
-	cout << "Big number created by the default constructor (without parameters)" << endl;
-	bn_4.output_hex();
+	cout << endl;
 
 	Big_Number bn_5(2);
-	if (bn_5.input_hex()) {
-		cout<<"HEX";
-		bn_5.output_hex();
-	}
+	bn_5.input_hex();
+	cout << "Enter a hexadecimal number for bn_5 (ml = 2): ";
+	bn_5.output_hex();
+	cout << endl;
 
-	if (bn_1 == bn_3) {
-		cout<<"YES";
-	}
-	else
-		cout<<"NO";
-	
-	if (bn_1 > bn_2) {
-		cout<<"YES";
-	}
-	else
-		cout<<"NO";
+	Big_Number bn_6;
+	bn_6.input_hex();
+	cout << "Enter a hexadecimal number for bn_6: ";
+	bn_6.output_hex();
+	cout << endl;
 
-	if (bn_1 >= bn_2) {
-		cout<<"YES";
-	}
-	else
-		cout<<"NO";
-
-	
-	if (bn_1 < bn_2) {
-		cout<<"YES";
-	}
-	else
-		cout<<"NO";
+    // Выполнение операции сложения и вывод результата
+    Big_Number sum = bn_5 + bn_6;
+    cout << "Sum of bn_5 and bn_6: ";
+    sum.output_hex();
+    cout << endl;
 
 
+	if (bn_5 == bn_6) {
+		cout << "The numbers bn_5 and bn_6 are equal." << endl;
+	} else {
+		cout << "The numbers bn_5 and bn_6 are not equal." << endl;
+	}
+
+	if (bn_5 == bn_6) {
+		cout << "The number bn_5 is equal to bn_6." << endl;
+	} else {
+		cout << "The number bn_5 is not equal to bn_6." << endl;
+	}
+
+	if (bn_5 > bn_6) {
+		cout << "The number bn_5 is greater than bn_2." << endl;
+	} else {
+		cout << "The number bn_5 is not greater than bn_2." << endl;
+	}
+
+	if (bn_5 >= bn_6) {
+		cout << "The number bn_5 is greater than or equal to bn_6." << endl;
+	} else {
+		cout << "The number bn_5 is not greater than or equal to bn_6." << endl;
+	}
+
+	if (bn_5 < bn_6) {
+		cout << "The number bn_5 is less than bn_6." << endl;
+	} else {
+		cout << "The number bn_5 is not less than bn_6." << endl;
+	}
+
+	return 0;
 }

@@ -1,0 +1,15 @@
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\bin\Debug\net8.0\Vector.exe
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\bin\Debug\net8.0\Vector.deps.json
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\bin\Debug\net8.0\Vector.runtimeconfig.json
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\bin\Debug\net8.0\Vector.dll
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\bin\Debug\net8.0\Vector.pdb
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.AssemblyInfoInputs.cache
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.AssemblyInfo.cs
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.csproj.CoreCompileInputs.cache
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.sourcelink.json
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.dll
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\refint\Vector.dll
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.pdb
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\Vector.genruntimeconfig.cache
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Vector\Vector\Vector\obj\Debug\net8.0\ref\Vector.dll
