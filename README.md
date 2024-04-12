@@ -7,7 +7,7 @@ This Python script provides functions for compressing and decompressing text fil
 1. Ensure you have Python installed on your system.
 2. Clone this repository to your local machine.
 3. Open a terminal or command prompt and navigate to the directory containing the script.
-4. Run the script by executing the command: `python huffman_coding.py`.
+4. Run the script by executing the command: `python main.py`.
 5. Follow the on-screen instructions to compress or decompress text files.
 
 ## Description
