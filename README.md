@@ -30,7 +30,3 @@ Suppose you have a text file named `example.txt` that you want to compress. You 
 2. The script will compress the file and save the compressed version as `compressed.txt` in the `result` directory.
 3. To decompress the file, run the script again and select the compressed file (`compressed.txt`) when prompted.
 4. The script will decompress the file and save the decompressed version as `decompressed.txt` in the `result` directory.
-
-## License
-
-This script is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
