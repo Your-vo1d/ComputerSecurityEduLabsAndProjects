@@ -44,7 +44,8 @@ class Right_Triangle : Triangle
     {
         if (!IsRightTriangle(side1, side2, hypotenuse))
         {
-            throw new ArgumentException("Неверные параметры для прямоугольного треугольника.");
+            Console.WriteLine("Неверные параметры для прямоугольного треугольника.");
+            hypotenuse = Math.Sqrt(side1 * side1 + side2 * side2);
         }
     }
 
@@ -81,18 +82,51 @@ class Circle : Figure
 
 class Program
 {
+    static double ReadDouble(string message)
+    {
+        double result;
+        while (true)
+        {
+            Console.Write(message);
+            if (double.TryParse(Console.ReadLine(), out result) && result > 0)
+                return result;
+            Console.WriteLine("Ошибка ввода. Пожалуйста, введите положительное число.");
+        }
+    }
+
     static void Main(string[] args)
     {
-        // Пример использования классов
-        Triangle triangle = new Triangle(3, 4, 5);
-        Console.WriteLine("Площадь треугольника: " + triangle.square());
-        Console.WriteLine("Периметр треугольника: " + triangle.perimeter());
+        double side1, side2, side3, radius;
 
-        Right_Triangle rightTriangle = new Right_Triangle(3, 4);
+        Console.WriteLine("Введите параметры треугольника:");
+        side1 = ReadDouble("Сторона 1: ");
+        side2 = ReadDouble("Сторона 2: ");
+        side3 = ReadDouble("Сторона 3: ");
+
+        // Проверка на существование треугольника
+        if (side1 + side2 <= side3 || side1 + side3 <= side2 || side2 + side3 <= side1)
+        {
+            Console.WriteLine("Треугольник с такими сторонами не существует.");
+        }
+        else
+        {
+            Triangle triangle = new Triangle(side1, side2, side3);
+            Console.WriteLine("Площадь треугольника: " + triangle.square());
+            Console.WriteLine("Периметр треугольника: " + triangle.perimeter());
+        }
+
+        Console.WriteLine("\nВведите параметры прямоугольного треугольника:");
+        side1 = ReadDouble("Катет 1: ");
+        side2 = ReadDouble("Катет 2: ");
+        double hypotenuse = ReadDouble("Гипотенуза: ");
+
+        Right_Triangle rightTriangle = new Right_Triangle(side1, side2, hypotenuse);
         Console.WriteLine("Площадь прямоугольного треугольника: " + rightTriangle.square());
         Console.WriteLine("Периметр прямоугольного треугольника: " + rightTriangle.perimeter());
 
-        Circle circle = new Circle(5);
+        Console.WriteLine("\nВведите радиус круга:");
+        radius = ReadDouble("Радиус: ");
+        Circle circle = new Circle(radius);
         Console.WriteLine("Площадь круга: " + circle.square());
         Console.WriteLine("Периметр круга: " + circle.perimeter());
     }

@@ -42,8 +42,17 @@ public:
 	bool operator>=(const Big_Number &bn); // Перегрузка оператора >=
 
 	Big_Number operator+(const Big_Number &bn);
-	Big_Number operator+=(const Big_Number &bn);
+	Big_Number& operator+=(const Big_Number &bn);
+
 	Big_Number operator-(const Big_Number &bn);
+	Big_Number& operator-=(const Big_Number &bn);
+
+    Big_Number operator*(const Big_Number &bn);
+    Big_Number& operator*=(const Big_Number &bn);
+
+    Big_Number operator*(BASE number);
+    Big_Number& operator*=(BASE number);
+
 };
 
 // Конструктор по умолчанию/параметрам
@@ -175,31 +184,34 @@ bool Big_Number::operator>(const Big_Number &bn)
 		return false;
 	if (this->len > bn.len) // Если длина текущего  больше, то истина
 		return true;
-	for (size_t i = len - 1; i >= 0;
-		 i--)
+	for (int i = len - 1; i >= 0; i--)
 	{ // Проход по всем цифрам числа, если хотя бы одно меньше, то ложь
-	if (coef[i] > bn.coef[i]){
-		return true;
-	}
-	if (coef[i] < bn.coef[i])
-		return false;
+		if (coef[i] > bn.coef[i]){
+			return true;
+		}
+		if (coef[i] < bn.coef[i])
+			return false;
 	}
 	return false;
 }
 // Перегрузка оператора больше или равно
 bool Big_Number::operator>=(const Big_Number &bn)
 {
-	if (this == &bn || this->len > bn.len) // Если сравнивается объект с самим
-		// собой или длины разные, то истина
-		return true;
-	if (this->len < bn.len) // Если длина текущего  больше, то ложь
-		return false;
-	for (size_t i = len - 1; i >= 0; i--)
-	{
-		if (coef[i] < bn.coef[i])
-			return false;
-	}
-	return true;
+    if (this == &bn || this->len > bn.len) // Если сравнивается объект с самим
+        // собой или длины разные, то истина
+        return true;
+    if (this->len < bn.len) // Если длина текущего  больше, то ложь
+        return false;
+    for (int i = len - 1; i >= 0; i--)
+    {
+        if (coef[i] < bn.coef[i])
+            return false;
+        if (coef[i] > bn.coef[i])
+		{
+            return true;
+		}
+    }
+    return true;
 }
 // Перегрузка оператора <
 bool Big_Number::operator<(const Big_Number &bn)
@@ -215,6 +227,9 @@ bool Big_Number::operator<(const Big_Number &bn)
 				return false;
 			}
 			if (coef[i] < bn.coef[i])
+			{
+
+			}
 				return true;
 	}
 	}
@@ -228,16 +243,17 @@ bool Big_Number::operator<=(const Big_Number &bn)
 		return true;
 	if (this->len > bn.len) // Если длина текущего  больше, то ложь
 		return false;
-	for (size_t i = len - 1; i >= 0; i--) // Проходимся по всем цифрам с начала (в coef записывали наоборот)
+	for (int i = len - 1; i >= 0; i--) // Проходимся по всем цифрам с начала (в coef записывали наоборот)
 	{
 		if (coef[i] > bn.coef[i]) // Если одна из цифр больше, то ложь
 			return false;
+		if (coef[i] < bn.coef[i])
+			return true;
 	}
 	return true;
 }
 
-
-
+// Ввод большого числа в 16-ом виде
 // Ввод большого числа в 16-ом виде
 void Big_Number::input_hex()
 {
@@ -284,7 +300,7 @@ void Big_Number::input_hex()
 			if (shift >= BASE_SIZE) // Если достигнут конец текущего коэффициента
 			{
 				shift = 0;
-				++coef_index;
+				coef_index++;
 			}
 		}
 	
@@ -332,7 +348,6 @@ void Big_Number::output_hex()
 }
 
 // Перегрузка оператора сложения +
-// Перегрузка оператора сложения +
 Big_Number Big_Number::operator+(const Big_Number &bn) {
     // Определение длин чисел
     int n = this->len;
@@ -367,73 +382,342 @@ Big_Number Big_Number::operator+(const Big_Number &bn) {
     return result;
 }
 
+// Перегрузка оператора +=
+Big_Number& Big_Number::operator+=(const Big_Number &bn) {
+    // Определение длин чисел
+    int n = this->len;
+    int m = bn.len;
+    int max_len = std::max(n, m) + 1; // учитываем дополнительный разряд для переноса
+
+    // Создаем временный массив для хранения результата сложения
+    BASE *temp = new BASE[max_len];
+
+    // Инициализация переменной для переноса
+    DBASE carry = 0;
+
+    // Сложение разрядов
+    for (int j = 0; j < max_len; ++j) {
+        // Получение текущих цифр из двух чисел и при необходимости переноса
+        DBASE uj = (j < n ? this->coef[j] : 0);
+        DBASE vj = (j < m ? bn.coef[j] : 0);
+
+        // Сложение текущих цифр с учетом переноса
+        DBASE tmp = uj + vj + carry;
+
+        // Присваивание результату текущего разряда
+        temp[j] = tmp & std::numeric_limits<BASE>::max();
+
+        // Обновление значения переноса
+        carry = tmp >> BASE_SIZE;
+    }
+
+    // Если был перенос за пределы максимальной длины, увеличиваем длину объекта
+    if (carry > 0 && this->len < max_len)
+        max_len = max_len;
+
+    // Удаляем ведущие нули, если они есть
+    while (max_len > 1 && temp[max_len - 1] == 0)
+        max_len--;
+
+    // Очищаем старые данные и копируем новый результат
+    delete[] this->coef;
+    this->coef = new BASE[max_len];
+    this->len = max_len;
+    std::copy(temp, temp + max_len, this->coef);
+
+    // Освобождаем временный массив
+    delete[] temp;
+
+    return *this;
+}
+
+// Перегрузка оператора вычитания -
+Big_Number Big_Number::operator-(const Big_Number &bn) {
+    int max_len = std::max(len, bn.len); // Максимальная длина результата
+    Big_Number result(max_len); // Создание объекта для результата
+
+    DBASE borrow = 0; // Инициализация переменной для заема
+
+    for (int j = 0; j < max_len; ++j) {
+        DBASE uj = (j < len ? coef[j] : 0); // Получение текущей цифры из первого числа или нуля, если разряд уже закончился
+        DBASE vj = (j < bn.len ? bn.coef[j] : 0); // Получение текущей цифры из второго числа или нуля, если разряд уже закончился
+
+        DBASE tmp = uj - vj - borrow; // Вычитание текущих цифр с учетом заема
+
+        if (tmp < 0) {
+            tmp += (1 << BASE_SIZE); // Если результат отрицательный, добавляем базу
+            borrow = 1; // Устанавливаем заем
+        } else {
+            borrow = 0; // Сбрасываем заем
+        }
+
+        result.coef[j] = BASE(tmp); // Присваиваем результат текущему разряду
+    }
+
+    // Удаляем ведущие нули, если они есть
+    while (max_len > 1 && result.coef[max_len - 1] == 0)
+        max_len--;
+
+    result.len = max_len; // Устанавливаем длину результата
+
+    return result;
+}
+
+// Перегрузка оператора -=
+Big_Number& Big_Number::operator-=(const Big_Number &bn) {
+    int max_len = std::max(len, bn.len); // Максимальная длина результата
+
+    // Создаем временный массив для хранения результата вычитания
+    BASE *temp = new BASE[max_len];
+
+    DBASE borrow = 0; // Инициализация переменной для заема
+
+    for (int j = 0; j < max_len; ++j) {
+        DBASE uj = (j < len ? coef[j] : 0); // Получение текущей цифры из первого числа или нуля, если разряд уже закончился
+        DBASE vj = (j < bn.len ? bn.coef[j] : 0); // Получение текущей цифры из второго числа или нуля, если разряд уже закончился
+
+        DBASE tmp = uj - vj - borrow; // Вычитание текущих цифр с учетом заема
+
+        if (tmp < 0) {
+            tmp += (1 << BASE_SIZE); // Если результат отрицательный, добавляем базу
+            borrow = 1; // Устанавливаем заем
+        } else {
+            borrow = 0; // Сбрасываем заем
+        }
+
+        temp[j] = BASE(tmp); // Присваиваем результат текущему разряду
+    }
+
+    // Удаляем ведущие нули, если они есть
+    while (max_len > 1 && temp[max_len - 1] == 0)
+        max_len--;
+
+    // Очищаем старые данные и копируем новый результат
+    delete[] coef;
+    coef = new BASE[max_len];
+    len = max_len;
+    std::copy(temp, temp + max_len, coef);
+
+    // Освобождаем временный массив
+    delete[] temp;
+
+    return *this;
+}
+Big_Number Big_Number::operator*(BASE number) {
+    Big_Number result(len + 1); // Создаем объект для результата умножения
+
+    DBASE tmp; // Переменная для временного хранения промежуточного результата
+    int j = 0;
+    int k = 0;
+
+    while (j < len) {
+        tmp = coef[j] * number + k; // Умножаем текущую цифру на число и прибавляем предыдущий перенос
+        result.coef[j] = (BASE)tmp; // Записываем младшие разряды в текущий элемент результата
+        k = (BASE)(tmp >> BASE_SIZE); // Вычисляем новый перенос
+        j++;
+    }
+
+    // Записываем оставшийся перенос в последний разряд результата
+    result.coef[j] = k;
+
+    // Обновляем длину результата
+    result.len = j + 1;
+
+    return result;
+}
+
+Big_Number& Big_Number::operator*=(BASE number) {
+    DBASE tmp; // Переменная для временного хранения промежуточного результата
+    int j = 0;
+    int k = 0;
+
+    while (j < len) {
+        tmp = coef[j] * number + k; // Умножаем текущую цифру на число и прибавляем предыдущий перенос
+        coef[j] = (BASE)tmp; // Записываем младшие разряды в текущий элемент
+        k = (BASE)(tmp >> BASE_SIZE); // Вычисляем новый перенос
+        j++;
+    }
+
+    // Если остался перенос после цикла, добавляем его как новый разряд
+    if (k > 0) {
+        // Если текущая длина недостаточна для хранения нового разряда, увеличиваем размер массива
+        if (len == maxlen) {
+            maxlen++;
+            BASE* new_coef = new BASE[maxlen];
+            std::copy(coef, coef + len, new_coef);
+            delete[] coef;
+            coef = new_coef;
+        }
+        coef[j] = k;
+        len++; // Увеличиваем длину числа
+    }
+
+    return *this;
+}
+
+
+Big_Number Big_Number::operator*(const Big_Number &bn) {
+    int m = len;
+    int n = bn.len;
+    int max_len = m + n; // Максимальная длина результата
+
+    // Создаем объект для результата умножения
+    Big_Number result(max_len);
+
+    // Устанавливаем начальные значения коэффициентов результата в ноль
+    for (int i = 0; i < max_len; ++i)
+        result.coef[i] = 0;
+
+    // Умножение большого числа на большое число
+    for (int j = 0; j < n; ++j) {
+        if (bn.coef[j] == 0)
+            continue; // Пропускаем умножение на нулевой коэффициент
+
+        BASE k = 0; // Перенос
+
+        for (int i = 0; i < m; ++i) {
+            DBASE tmp = result.coef[i + j] + (DBASE)coef[i] * bn.coef[j] + k;
+            result.coef[i + j] = (BASE)tmp; // Младшие разряды
+            k = (BASE)(tmp >> BASE_SIZE); // Перенос
+        }
+
+        // Установка старшего разряда
+        result.coef[j + m] = k;
+    }
+
+    // Обновление длины результата
+    result.len = max_len;
+
+    // Удаление ведущих нулей, если они есть
+    while (result.len > 1 && result.coef[result.len - 1] == 0)
+        result.len--;
+
+    return result;
+}
+
+Big_Number& Big_Number::operator*=(const Big_Number &bn) {
+    int m = len;
+    int n = bn.len;
+    int max_len = m + n; // Максимальная длина результата
+
+    // Создаем временный массив для хранения результата умножения
+    BASE *temp = new BASE[max_len];
+    std::fill(temp, temp + max_len, 0); // Устанавливаем все элементы в 0
+
+    // Умножение большого числа на большое число
+    for (int j = 0; j < n; ++j) {
+        if (bn.coef[j] == 0)
+            continue; // Пропускаем умножение на нулевой коэффициент
+
+        BASE k = 0; // Перенос
+
+        for (int i = 0; i < m; ++i) {
+            DBASE tmp = temp[i + j] + (DBASE)coef[i] * bn.coef[j] + k;
+            temp[i + j] = (BASE)tmp; // Младшие разряды
+            k = (BASE)(tmp >> BASE_SIZE); // Перенос
+        }
+
+        // Установка старшего разряда
+        temp[j + m] = k;
+    }
+
+    // Очищаем старые данные и копируем новый результат
+    delete[] coef;
+    coef = new BASE[max_len];
+    std::copy(temp, temp + max_len, coef);
+
+    // Обновление длины результата
+    len = max_len;
+
+    // Удаление ведущих нулей, если они есть
+    while (len > 1 && coef[len - 1] == 0)
+        len--;
+
+    // Освобождаем временный массив
+    delete[] temp;
+
+    return *this;
+}
+
 
 
 int main()
 {
-	Big_Number bn_1(1);
-	cout << "Big number bn_1 created by the constructor with parameter ml = 1: ";
-	bn_1.output_hex();
-	cout << endl;
+	    // Тестирование метода input_hex
+    std::cout << "Enter the first hexadecimal number: "; // Введите первое шестнадцатеричное число
+    Big_Number bn1;
+    bn1.input_hex();
+	bn1.output_hex();
+    std::cout << "Enter the second hexadecimal number: "; // Введите второе шестнадцатеричное число
+    Big_Number bn2;
+    bn2.input_hex();
+	bn2.output_hex();
+    // Тестирование операторов сравнения
+    if (bn1 == bn2) {
+        std::cout << "The first number is equal to the second number.\n"; // Первое число равно второму числу
+    } else {
+        std::cout << "The first number is not equal to the second number.\n"; // Первое число не равно второму числу
+    }
 
-	Big_Number bn_2(4, 1);
-	cout << "Big number bn_2 created by the constructor with parameters ml = 4, p = 1 (max length 4, random digits): ";
-	bn_2.output_hex();
-	cout << endl;
+    if (bn1 != bn2) {
+        std::cout << "The first number is not equal to the second number.\n"; // Первое число не равно второму числу
+    } else {
+        std::cout << "The first number is equal to the second number.\n"; // Первое число равно второму числу
+    }
 
-	Big_Number bn_3(4);
-	cout << "Big number bn_3 created by the constructor with parameter ml = 4 (max length 4): ";
-	bn_3.output_hex();
-	cout << endl;
+    if (bn1 < bn2) {
+        std::cout << "The first number is less than the second number.\n"; // Первое число меньше второго числа
+    } else {
+        std::cout << "The first number is not less than the second number.\n"; // Первое число не меньше второго числа
+    }
 
-	Big_Number bn_5(2);
-	bn_5.input_hex();
-	cout << "Enter a hexadecimal number for bn_5 (ml = 2): ";
-	bn_5.output_hex();
-	cout << endl;
+    if (bn1 <= bn2) {
+        std::cout << "The first number is less than or equal to the second number.\n"; // Первое число меньше или равно второму числу
+    } else {
+        std::cout << "The first number is greater than the second number.\n"; // Первое число больше второго числа
+    }
 
-	Big_Number bn_6;
-	bn_6.input_hex();
-	cout << "Enter a hexadecimal number for bn_6: ";
-	bn_6.output_hex();
-	cout << endl;
+    if (bn1 > bn2) {
+        std::cout << "The first number is greater than the second number.\n"; // Первое число больше второго числа
+    } else {
+        std::cout << "The first number is not greater than the second number.\n"; // Первое число не больше второго числа
+    }
 
-    // Выполнение операции сложения и вывод результата
-    Big_Number sum = bn_5 + bn_6;
-    cout << "Sum of bn_5 and bn_6: ";
-    sum.output_hex();
-    cout << endl;
+    if (bn1 >= bn2) {
+        std::cout << "The first number is greater than or equal to the second number.\n"; // Первое число больше или равно второму числу
+    } else {
+        std::cout << "The first number is less than the second number.\n"; // Первое число меньше второго числа
+    }
 
+    Big_Number bn3 = bn1 + bn2;
+    std::cout << "bn1 + bn2 = "; // Сумма bn1 и bn2
+    bn3.output_hex();
 
-	if (bn_5 == bn_6) {
-		cout << "The numbers bn_5 and bn_6 are equal." << endl;
-	} else {
-		cout << "The numbers bn_5 and bn_6 are not equal." << endl;
-	}
+    // Тестирование оператора +=
+    bn1 += bn2;
+    std::cout << "Updated bn1 after adding bn2: "; // Обновленный bn1 после добавления bn2
+    bn1.output_hex();
 
-	if (bn_5 == bn_6) {
-		cout << "The number bn_5 is equal to bn_6." << endl;
-	} else {
-		cout << "The number bn_5 is not equal to bn_6." << endl;
-	}
+    Big_Number bn4 = bn3 - bn2;
+    std::cout << "bn_3 - bn_2 = "; // Сумма bn1 и bn2
+    bn4.output_hex();
 
-	if (bn_5 > bn_6) {
-		cout << "The number bn_5 is greater than bn_2." << endl;
-	} else {
-		cout << "The number bn_5 is not greater than bn_2." << endl;
-	}
+	bn1 -= bn2;
+    std::cout << "bn_1 -= bn_2 "; // Сумма bn1 и bn2
+    bn1.output_hex();
 
-	if (bn_5 >= bn_6) {
-		cout << "The number bn_5 is greater than or equal to bn_6." << endl;
-	} else {
-		cout << "The number bn_5 is not greater than or equal to bn_6." << endl;
-	}
+	if (bn1 == bn4) {
+        std::cout << "The first number is equal to the second number.\n"; // Первое число равно второму числу
+    } else {
+        std::cout << "The first number is not equal to the second number.\n"; // Первое число не равно второму числу
+    }
+    BASE m = 2;
+    Big_Number resultMult = bn1 * 3;
+    resultMult.output_hex();
+    resultMult*= m;
+    resultMult.output_hex();
 
-	if (bn_5 < bn_6) {
-		cout << "The number bn_5 is less than bn_6." << endl;
-	} else {
-		cout << "The number bn_5 is not less than bn_6." << endl;
-	}
-
-	return 0;
+    Big_Number res = bn1 * bn2;
+    res.output_hex();
+    return 0;
 }

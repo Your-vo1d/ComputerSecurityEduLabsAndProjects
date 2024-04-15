@@ -1,0 +1,15 @@
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\bin\Debug\net8.0\Class_Figure.exe
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\bin\Debug\net8.0\Class_Figure.deps.json
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\bin\Debug\net8.0\Class_Figure.runtimeconfig.json
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\bin\Debug\net8.0\Class_Figure.dll
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\bin\Debug\net8.0\Class_Figure.pdb
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.AssemblyInfoInputs.cache
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.AssemblyInfo.cs
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.csproj.CoreCompileInputs.cache
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.sourcelink.json
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.dll
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\refint\Class_Figure.dll
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.pdb
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\Class_Figure.genruntimeconfig.cache
+C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Class_Figure\Class_Figure\Class_Figure\obj\Debug\net8.0\ref\Class_Figure.dll
