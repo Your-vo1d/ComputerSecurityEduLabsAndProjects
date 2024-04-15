@@ -64,10 +64,10 @@ class Vec
 
     public static Vec InputVector()
     {
-        Console.WriteLine("Введите координату x:");
+        Console.WriteLine("Enter x:");
         int x = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("Введите координату y:");
+        Console.WriteLine("Enter y:");
         int y = int.Parse(Console.ReadLine());
 
         return new Vec(x, y);
@@ -93,30 +93,40 @@ class Solution
         Vec v5 = new Vec(2, 3);
         Console.WriteLine("Vector №5: " + v5);
 
-        if (v2 == v4)
+        Vec inpVec1 = Vec.InputVector();
+        Console.WriteLine("The introduced vector: " + inpVec1);
+
+        Vec inpVec2 = Vec.InputVector();
+        Console.WriteLine("The introduced vector: " + inpVec2);
+
+        if (inpVec1 == inpVec2)
         {
-            Console.WriteLine("The vector 2 and 4 are equal.");
+            Console.WriteLine("The introdused vector 1 and 2 are equal.");
         }
         else
         {
-            Console.WriteLine("The vector 2 and 4 aren't equal.");
+            Console.WriteLine("The introdused vector 1 and 2 aren't equal.");
         }
-        
+
         if (v2 != v3)
         {
-            Console.WriteLine("The vector 2 and 3 aren't equal.");
+            Console.WriteLine("The introdused vector 1 and 2 aren't equal.");
         }
         else
         {
-            Console.WriteLine("The vector 2 and 3 are equal.");
+            Console.WriteLine("The introdused vector 1 and 2 are equal.");
         }
-        Vec result = new Vec();
-        result = v3 * 5;
-        Console.WriteLine("The result is the multiplication of a vector №3 by a number (5): " + result);
-        int resultVV = v5 * v3;
-        Console.WriteLine("The result is the multiplication of a vector №5 by a vector №3: " + resultVV);
 
-        Vec inpVec = Vec.InputVector();
-        Console.WriteLine("The introduced vector: " + inpVec);
+        Vec result = new Vec();
+        int mult = 0;
+        while (!(int.TryParse(Console.ReadLine(), out mult)))
+        {
+            Console.WriteLine("Error. Try again.");
+        }
+        result = inpVec1 * mult;
+        Console.WriteLine("The result is the multiplication of a introdused vector 1 by a number : " + result);
+        int resultVV = inpVec1 * inpVec2;
+        Console.WriteLine("The result is the multiplication of a introdused vector 1 and 2: " + resultVV);
+
     }
 }
