@@ -1,13 +1,8 @@
-# Ignore all files with the extension .log, .exe, and .out
 *.log
 *.exe
 *.out
 
-# Ignore the directory named ".vs"
-.vs
-
-# Ignore all files in the "obj" directory and its subdirectories
 obj/
-
-# Ignore all files in the "bin" directory and its subdirectories
+vs/
+vscode/
 bin/
