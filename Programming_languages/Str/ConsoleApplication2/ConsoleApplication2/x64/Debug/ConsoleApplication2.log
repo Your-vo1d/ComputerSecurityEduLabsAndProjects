@@ -1,4 +1,0 @@
-﻿  ConsoleApplication2.cpp
-C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Str\ConsoleApplication2\ConsoleApplication2\ConsoleApplication2.cpp(232,42): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Str\ConsoleApplication2\ConsoleApplication2\ConsoleApplication2.cpp(234,8): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-  ConsoleApplication2.vcxproj -> C:\Users\Void\Documents\4 семестр\Lab_2nd_years\Programming_languages\Str\ConsoleApplication2\x64\Debug\ConsoleApplication2.exe
