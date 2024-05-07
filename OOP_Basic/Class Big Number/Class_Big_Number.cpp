@@ -4,7 +4,7 @@
 #include <cstring>
 #include <math.h>
 #include <algorithm>
-typedef int BASE;
+typedef unsigned int BASE;
 typedef unsigned long DBASE;
 #define BASE_SIZE (sizeof(BASE) * 8);
 using namespace std;
@@ -552,11 +552,12 @@ Big_Number& Big_Number::operator*=(const Big_Number &multiplier) {
 }
 
 Big_Number Big_Number::operator/(const BASE &divisor) {
+    if (divisor == 0)
+        throw std::runtime_error("Division by zero");
     int index = 0;
     DBASE remainder = 0;
     Big_Number result(length);
 
-    BASE quotient = 0;
     int base_size = BASE_SIZE;
 
     while (index < length) {
@@ -576,6 +577,8 @@ Big_Number Big_Number::operator/(const BASE &divisor) {
 }
 
 Big_Number Big_Number::operator%(const BASE &divisor) {
+    if (divisor == 0)
+        throw std::runtime_error("Division by zero");
     int index = 0;
     DBASE remainder = 0;
     BASE quotient = 0;
@@ -595,6 +598,8 @@ Big_Number Big_Number::operator%(const BASE &divisor) {
 }
 
 Big_Number& Big_Number::operator/=(const BASE &divisor) {
+    if (divisor == 0)
+        throw std::runtime_error("Division by zero");
     int index = 0;
     DBASE remainder = 0;
     BASE quotient = 0;
@@ -627,6 +632,8 @@ Big_Number& Big_Number::operator/=(const BASE &divisor) {
 }
 
 Big_Number& Big_Number::operator%=(const BASE &divisor) {
+    if (divisor == 0)
+        throw std::runtime_error("Division by zero");
     int index = 0;
     DBASE remainder = 0;
     BASE quotient = 0;
@@ -649,15 +656,13 @@ Big_Number& Big_Number::operator%=(const BASE &divisor) {
 void Big_Number::cout_10()
 {
     Big_Number newNum = *this;
-    Big_Number zero(newNum.length);
+    Big_Number zero;
     string s;
-    zero.length = newNum.length;
     while (newNum != zero)
     {
         Big_Number t = newNum % 10;
         s.push_back(t.digits[0] + '0');
         newNum = newNum / 10;
-        zero.length = newNum.length;
     }
     reverse(s.begin(), s.end());
     cout << "Base10= " << s << endl;
@@ -671,12 +676,11 @@ void Big_Number::cin_10()
     getline(cin, s);
     int k = s.length(); /// длина строки пользователя
     BASE t = 0;
-    DBASE tmp = 0;
 
     int b = BASE_SIZE;
 
-    Big_Number bNum((k - 1) / (b / 4) + 1);
-
+    Big_Number bNum;
+        Big_Number newNum;
     while (j < k)
     {
         if ('0' > s[j] || s[j] > '9')
@@ -684,9 +688,8 @@ void Big_Number::cin_10()
             throw invalid_argument("Invalid arguments");
         }
         t = s[j] - '0'; /// преобразование из строки в число
-        bNum = bNum * ((BASE)10);
+        bNum = bNum * 10;
 
-        Big_Number newNum;
         newNum.digits[0] = (BASE)t;
         bNum += newNum;
         j++;
@@ -721,7 +724,7 @@ Big_Number Big_Number::operator/(const Big_Number &num)
     int m = length - num.length; /// длина ответа
     int base_size = BASE_SIZE;
     DBASE b = ((DBASE)1 << base_size);                           /// основание числа
-    DBASE d = b / (DBASE)(num.digits[num.length - 1] + (BASE)1); /// для нормализации
+    DBASE d = b / (DBASE)(num.digits[num.length - 1] + (BASE)1); /// для нормализации D1
     int j = m;
     int k = 0; /// перенос
 
@@ -731,10 +734,9 @@ Big_Number Big_Number::operator/(const Big_Number &num)
     delNum *= d;
 
     Big_Number finNum(m + 1);
-    finNum.length = m + 1;
 
     if (newNum.length == length)
-    { /// сравниваем длину нормализованного с исходным
+    { /// сравниваем длину нормализованного с исходным D1
         newNum.maxlen++;
         newNum.length = maxlen;
         delete[] newNum.digits;
@@ -749,7 +751,7 @@ Big_Number Big_Number::operator/(const Big_Number &num)
     }
 
     while (j > -1)
-    {
+    { // D3
         DBASE q = (DBASE)((DBASE)((DBASE)((DBASE)(newNum.digits[j + delNum.length]) * (DBASE)(b)) + (DBASE)(newNum.digits[j + delNum.length - 1])) / (DBASE)(delNum.digits[delNum.length - 1]));
         DBASE r = (DBASE)((DBASE)((DBASE)((DBASE)(newNum.digits[j + delNum.length]) * (DBASE)(b)) + (DBASE)(newNum.digits[j + delNum.length - 1])) % (DBASE)(delNum.digits[delNum.length - 1]));
 
@@ -765,9 +767,8 @@ Big_Number Big_Number::operator/(const Big_Number &num)
                 }
             }
         }
-
+    //
         Big_Number u(delNum.length + 1);
-        u.length = delNum.length + 1;
         for (int i = 0; i < delNum.length + 1; i++)
         {
             u.digits[i] = newNum.digits[j + i]; /// кусок делимого длины делителя
@@ -855,13 +856,12 @@ Big_Number Big_Number::operator%(const Big_Number &num)
             }
         }
         Big_Number u(delNum.length + 1);
-        u.length = delNum.length + 1;
         for (int i = 0; i < delNum.length + 1; i++)
         {
             u.digits[i] = newNum.digits[j + i];
         }
 
-        if (u < delNum * (BASE)(q))
+        if (u < delNum * (BASE)(q)) //
         {
 
             q--;
@@ -1106,15 +1106,17 @@ ostream &operator<<(ostream &st, const Big_Number &num)
         st.fill('0');       // заполняем нолями пустые места
         st << hex << (int)num.digits[j];
     }
+    st << dec;
+    if (num.length == 0)
+    {
+        st << '0' <<endl;
+    }
     return st;
 }
 
 
 
-
-void test()
-{
-    srand(time(NULL));
+void test() {
     int M = 1000;
     int T = 1000;
 
@@ -1122,9 +1124,7 @@ void test()
     Big_Number B;
     Big_Number C;
     Big_Number D;
-    do
-    {
-
+    do {
         int n = rand() % M + 1;
         int m = rand() % M + 1;
         Big_Number E(n, 1);
@@ -1136,104 +1136,13 @@ void test()
         cout << "m: " << m << " ";
         cout << "n: " << n << " ";
         cout << "T: " << T << endl;
-
-    } while (A == C * B + D && A - D == C * B && D < B && --T);
-    cout << T << endl;
-    // if(T!=0){
-    //     // cout<<"A: "<<A<<endl;
-    //     cout<<"B: "<<B<<endl;
-    //     // cout<<"C: "<<C<<endl;
-    //     cout<<"D: "<<D<<endl;
-    // }
+    } while (A == C * B + D && A - D == C * B && D < B && --T >= 0);
 }
+
 
 
 int main()
 {
-    std::cout<<sizeof(int);
-    std::cout<<sizeof(unsigned short);
-    std::cout<<sizeof(unsigned long);
-    std::cout<<sizeof(unsigned long long);
-    Big_Number num1(10); // Создаем объекты класса Big_Number
-    num1.cin_10(); // Вводим значение для num1
-    Big_Number num2(10);
-    num2.cin_10(); // Вводим значение для num2
-
-    Big_Number result = num1 + num2; // Сложение
-    std::cout << "Result of num1 + num2 = " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result += num1; // Прибавление num1 к result
-    std::cout << "Result after adding num1: " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result -= num2; // Вычитание num2 из result
-    std::cout << "Result after subtracting num2: " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    Big_Number num_3 = num1 + num2;
-    num_3 -= num1;
-    std::cout << "num3: " << num_3 << " (Decimal: ";
-    num_3.cout_10(); std::cout << ")" << std::endl;
-
-
-    // Пример использования операторов умножения
-    BASE digit = 5;
-    result = num1 * digit; // Умножение на цифру
-    std::cout << "Result of num1 * " << digit << " = " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result *= digit; // Умножение на цифру с присваиванием
-    std::cout << "Result after multiplying by " << digit << ": " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    Big_Number num3(10);
-    num3.cin_10(); // Вводим значение для num3
-
-    result = num1 * num3; // Умножение на другой объект Big_Number
-    std::cout << "Result of num1 * num3 = " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result *= num3; // Умножение на другой объект Big_Number с присваиванием
-    std::cout << "Result after multiplying by num3: " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    // Пример использования операторов деления
-    result = num1 / num2; // Деление
-    std::cout << "Result of num1 / num2 = " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result = num1 / digit; // Деление на цифру
-    std::cout << "Result of num1 / " << digit << " = " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    // Пример использования операторов деления с присваиванием
-    result /= num2; // Деление с присваиванием
-    std::cout << "Result after dividing by num2: " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result /= digit; // Деление на цифру с присваиванием
-    std::cout << "Result after dividing by " << digit << ": " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    // Пример использования операторов остатка от деления
-    result = num1 % num2; // Остаток от деления
-    std::cout << "Result of num1 % num2 = " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result = num1 % digit; // Остаток от деления на цифру
-    std::cout << "Result of num1 % " << digit << " = " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    // Пример использования операторов остатка от деления с присваиванием
-    result %= num2; // Остаток от деления с присваиванием
-    std::cout << "Result after modulo by num2: " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
-    result %= digit; // Остаток от деления на цифру с присваиванием
-    std::cout << "Result after modulo by " << digit << ": " << result << " (Decimal: ";
-    result.cout_10(); std::cout << ")" << std::endl;
-
     test();
     return 0;
 }
