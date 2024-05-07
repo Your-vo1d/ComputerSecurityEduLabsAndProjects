@@ -1,310 +1,175 @@
 #include <iostream>
-#include <stdexcept>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
 class Node {
-    friend class BinTree;
     int key;
     Node *left, *right;
 
 public:
-    Node(int k = 0, Node *l = NULL, Node *r = NULL) {
+    Node(int k = 0, Node *l = nullptr, Node *r = nullptr) {
         key = k;
         left = l;
         right = r;
     }
-
-    ~Node() {
-        key = 0;
-        left = NULL;
-        right = NULL;
-    }
+    friend class BinaryTree;
+    friend class SearchTree;
 };
 
-struct elem{
-    Node * p;// на уузел
-    elem * next;// на следующий элемент
-};
-
-
-class BinTree {
-protected:
+class BinaryTree {
     Node *root;
-    void print_tree(int, Node *);
-    void delete_tree(Node *);
-    Node* add_node(Node *, Node *);///копирование дерева
 
 public:
-    BinTree() {
-        root == NULL;
+    BinaryTree() {
+        root = nullptr;
     }
 
-    BinTree(int len) {
-        root = NULL;
-        for (int i = 0; i < len; i++) {
-            int k = rand() % 100;
-            this->add(k);
-        }
+    BinaryTree(int n);
+    Node *createBinaryTree(int n);
+    BinaryTree(const BinaryTree &);
+    Node *copyTree(Node *);
+    Node *getRoot() {
+        return root;
     }
-
-    BinTree(int len, int *arr) {
-        root = NULL;
-        for (int i = 0; i < len; i++) {
-            this->add(arr[i]);
-        }
-    }
-
-    BinTree(const BinTree &tree) {
-        root = add_node(root, tree.root);
-    }
-
-    ~BinTree(){
-        delete_tree(root);
-    }
-    BinTree &operator=(const BinTree &);
-    void add(int);
-    Node *del(int);
-    Node *del(Node *);
-    void print();
-    int max();
+    void printTree();
+    void printTree(Node *, int);
+    int LNR(int *);
+    void LNR(Node *, int *, int &);
     int min();
-    elem* BFS();
-    void LRK(Node* );
-
+    int min(Node *);
+    void leaves();
+    void leaves(Node *);
 };
 
-void BinTree::add(int k) {
-    if (root == NULL) {
-        root = new Node(k);
+BinaryTree::BinaryTree(int n) {
+    root = createBinaryTree(n);
+}
+
+Node *BinaryTree::createBinaryTree(int n) {
+    if (n == 0)
+        return nullptr;
+    Node *q = new Node(rand() % 100);
+    int n1;
+    n1 = n / 2;
+    q->left = createBinaryTree(n1);
+    q->right = createBinaryTree(n - 1 - n1);
+    return q;
+}
+
+BinaryTree::BinaryTree(const BinaryTree &T) {
+    if (T.root == nullptr)
+        root = nullptr;
+    else {
+        root = new Node(T.root->key);
+        root->left = copyTree(T.root->left);
+        root->right = copyTree(T.root->right);
+    }
+}
+
+Node *BinaryTree::copyTree(Node *q) {
+    if (q == nullptr)
+        return nullptr;
+    Node *p = new Node(q->key);
+    p->left = copyTree(q->left);
+    p->right = copyTree(q->right);
+    return p;
+}
+
+void BinaryTree::printTree() {
+    if (root == nullptr) {
+        cout << "Дерево пустое";
         return;
     }
-    Node *node = root;
-    while (node) {
-        if (node->key > k && node->left == NULL) {
-            node->left = new Node(k);
-            return;
-        } else if (node->key <= k && node->right == NULL) {
-            node->right = new Node(k);
-            return;
-        }
-        if (node->key > k)
-            node = node->left;
-        else
-            node = node->right;
-
-    }}
-void BinTree::delete_tree(Node * node) {
-    if (node){
-        delete_tree(node->left);
-        delete_tree(node->right);
-        delete node;
-    }
-}
-Node * BinTree::add_node(Node * n, Node * node) {
-    if(!node){
-        return  NULL;
-    }
-    n =new Node(node ->key);
-    n -> left =add_node(n->left,node->left);
-    n -> right = add_node(n->right, node->right);
-    return n;
+    printTree(root, 0);
 }
 
-BinTree& BinTree::operator=(const BinTree & tree) {
-    if(this != &tree){
-        delete_tree(root);///удалить дерево
-        root = add_node(root, tree.root);
+void BinaryTree::printTree(Node *q, int k) {
+    if (q == nullptr)
+        return;
+    printTree(q->right, k + 3);
+    for (int i = 0; i < k; i++) {
+        cout << " ";
     }
-    return *this;
+    cout.width(2);
+    cout << q->key << endl;
+    printTree(q->left, k + 3);
 }
 
-void BinTree::print() {
-    print_tree(1, root);
+int BinaryTree::LNR(int *a) {
+    int k = 0;
+    LNR(root, a, k);
+    return k;
+}
+
+void BinaryTree::LNR(Node *q, int *a, int &k) {
+    if (q == nullptr)
+        return;
+    LNR(q->left, a, k);
+    a[k++] = q->key;
+    LNR(q->right, a, k);
+}
+
+int BinaryTree::min() {
+    if (root == nullptr) {
+        cout << "Дерево пустое";
+        return -1;
+    }
+    return min(root);
+}
+
+int BinaryTree::min(Node *q) {
+    int m, m1;
+    m = q->key;
+    if (q->left) {
+        m1 = min(q->left);
+        if (m1 < m)
+            m = m1;
+    }
+    if (q->right) {
+        m1 = min(q->right);
+        if (m1 < m)
+            m = m1;
+    }
+    return m;
+}
+
+void BinaryTree::leaves() {
+    if (root == nullptr) {
+        cout << "Дерево пустое";
+        return;
+    }
+    leaves(root);
+}
+
+void BinaryTree::leaves(Node *q) {
+    if (q == nullptr)
+        return;
+    if (!(q->left) && !(q->right)) {
+        cout << q->key << " ";
+        return;
+    }
+    leaves(q->left);
+    leaves(q->right);
+}
+
+int main() {
+    srand(time(0));
+    BinaryTree T(10), T1(T), T2;
+    T.printTree();
+    cout << "Минимальное значение в дереве: " << T.min() << endl;
+    cout << "Листья дерева: ";
+    T.leaves();
     cout << endl;
-}
-
-void BinTree::print_tree(int k, Node* node) {
-
-    if (node != NULL)
-    {
-
-        print_tree (k+5, node->right);
-        for(int i = 0; i < k; i++) {
-            cout << " ";
-        }
-        cout << node->key  << endl;
-        print_tree (k+5, node->left);
-    }
-
-}
-
-int BinTree::min() {
-    Node *curr = root;
-    while (curr->left) {
-        curr = curr->left;
-    }
-    if (curr) {
-        return curr->key;
-    }
-    return -1;
-}
-
-int BinTree::max() {
-    Node *curr = root;
-    while (curr->right) {
-        curr = curr->right;
-    }
-    if (curr) {
-        return curr->key;
-    }
-    return -1;
-}
-////начинаем от сюда))))) 0_0
-///                       \|/
-///                       |
-///                      /\
-///
-Node *BinTree::del(Node *s) {
-    return del(s->key);
-}
-
-Node *BinTree::del(int k) {
-    Node *current = root;///узел работы
-    Node *parent = NULL;
-    Node *s;
-    Node *r;
-    Node d;
-    while (current && current->key != k) {///выбираем куда идти
-        parent = current;
-        if (current->key > k)
-            current = current->left;
-        else
-            current = current->right;
-    }
-    if (!current)
-        throw invalid_argument("Key not found.");///ключ не найден
-
-    else if (current->left == NULL)///есть ли левые потомки
-        if (parent && parent->left == current) {///родитель справа
-            parent->left = current->right;
-            delete current;//дроп узел и сдвигаем вверх
-            return  parent->left;
-        } else if (parent && parent->right == current){/// родитель слева
-            parent->right = current->right;
-            delete current;//дроп узел и сдвиг вверх
-            return parent->right;
-        }
-        else {/// попадаю в корень
-            s = current->right;//сдвигаю корень
-            root = s;
-            return root;
-        }
-        else if (current -> right == NULL){/// правые потомки 0 тоже самое но зеркально
-            if (parent && parent->left == current){
-                parent->left = current->left;
-                delete current;
-                return parent->left;
-            } else if (parent && parent->right == current){
-                parent->right = current->left;
-                delete current;
-                return parent->right;
-            } else {
-                s= current->left;
-                root =s;
-                return root;
-            }
-        }
-        s = current->right;/// если есть потомки , то идем в право
-        if (s->left == NULL){//смотрим левые потомки
-            current->key = s->key;// перенесли ключ
-            current->right = s->right;// сдвиг вверх
-            delete s;
-            return current;
-        }
-    while (s->left != NULL){// бежим в крайний левый
-        r =s;
-        s=s->left;//выбрали левый
-    }
-    current->key = s->key;
-    r->left=s->right;//выбраным узлом заменяем удаляемый
-    delete s;
-    return current;
-}
-
-elem* BinTree::BFS() {
-    elem* runner;
-    elem* h=new elem;
-    elem* t;
-    h->p = root;
-    h->next = NULL;
-    t = h;
-    runner = h;
-    while (h != NULL) {
-        if (h->p->left != NULL) {
-            elem* left_child = new elem;
-            left_child->p = h->p->left;// учли 1 ребёнка
-            left_child->next = NULL;// следующий пока нулевой
-            runner->next = left_child;
-            runner = runner->next;
-        }
-        if (h->p->right != NULL) {
-            elem* right_child = new elem;
-            right_child->p = h->p->right;// учитываем одного правого
-            right_child->next = NULL;// следующий пустой
-            runner->next = right_child;
-            runner = runner->next;
-        }
-        cout << h->p->key << " " ;// Выводим 1 элемент
-        h = h->next;//перехожу на следующий элем
+    int a[10];
+    int size = T.LNR(a);
+    cout << "Результат ЛКП обхода: ";
+    for (int i = 0; i < size; i++) {
+        cout << a[i] << " ";
     }
     cout << endl;
-    return t;
-}
-void BinTree:: LRK (Node * r =NULL){
-    if ( r == NULL) r = root;
-    if (r->left) LRK(r->left);
-    if (r->right) LRK(r->right);
-    cout << r -> key<< " ";
-}
-
-int test() {
-    int a[] = {13, 1, 45, 3, 4, 56, 13, };
-    BinTree hah(10);
-    BinTree heh(hah);
-    BinTree hoh(6);
-    BinTree hih(10, a);
-    hoh = hah;
-
-    hah.print();
-    cout<< "////////////////////////////////////////////////////////////////"<< endl;
-    heh.print();
-    cout<< "////////////////////////////////////////////////////////////////"<< endl;
-    hoh.print();
-    cout<< "////////////////////////////////////////////////////////////////"<< endl;
-    hih.print();
-    cout<< "////////////////////////////////////////////////////////////////"<< endl;
-
-    cout<< "min="<< hih.min()<< endl;
-    cout<< "max="<< hih.max()<< endl;
-    cout<< "delete 3="<< endl;
-    hih.print();
-    cout<<"//////////////////////////////////////////////////////////////////////////////////"<<endl;
-    hih.del(3);
-    hih.print();
-    hih.LRK();
-    cout <<endl;
-    hih.BFS();
-
-    BinTree hzh(12);
-    int keys;
-    hzh.print();
-    cout<< "vvod key"<< endl;
-    cin >> keys;
-    hzh.del(keys);
-    hzh.print();
+    T2.printTree();
+    cout << endl;
     return 0;
-}
-int main(){
-   test();
 }
