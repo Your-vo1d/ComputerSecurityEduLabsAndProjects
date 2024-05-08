@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <list>
 
 class BinaryTree
 {
@@ -39,6 +40,7 @@ public:
     void printTree();
     int LNR(int *);
     int min();
+    int max();
     void leaves();
 
 private:
