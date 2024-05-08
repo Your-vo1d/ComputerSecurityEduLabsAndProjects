@@ -1,8 +1,9 @@
 *.log
 *.exe
 *.out
+*.o
 
 obj/
-vs/
-vscode/
+.vs/
+.vscode//
 bin/
