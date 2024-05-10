@@ -3,7 +3,7 @@
 *.out
 *.o
 
-obj/
-.vs/
-.vscode//
-bin/
+obj/**
+.vs/**
+.vscode/**
+bin/**
