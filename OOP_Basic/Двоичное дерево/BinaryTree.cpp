@@ -145,6 +145,23 @@ int BinaryTree::min(Node *q)
     return m;
 }
 
+int BinaryTree::max() {
+    if (root == nullptr) {
+        // Если дерево пустое, возвращаем -1 или другое значение по умолчанию
+        return -1; // Пример значения по умолчанию
+    }
+
+    // Ищем самый правый узел, это будет максимальное значение в дереве
+    Node *current = root;
+    while (current->right != nullptr) {
+        current = current->right;
+    }
+
+    return current->key;
+}
+
+
+
 void BinaryTree::leaves()
 {
     if (root == nullptr)
