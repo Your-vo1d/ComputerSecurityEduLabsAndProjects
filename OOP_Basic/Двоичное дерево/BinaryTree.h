@@ -50,6 +50,7 @@ private:
     void printTree(Node *, int);
     void LNR(Node *, int *, int &);
     int min(Node *);
+    int max(Node *);
     void leaves(Node *);
 };
 
