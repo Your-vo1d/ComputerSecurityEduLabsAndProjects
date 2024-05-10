@@ -39,8 +39,8 @@ public:
     Node *getRoot();
     void printTree();
     int LNR(int *);
-    int min();
-    int max();
+    virtual int min();
+    virtual int max();
     void leaves();
 
 private:
