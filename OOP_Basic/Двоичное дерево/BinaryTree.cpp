@@ -13,65 +13,64 @@ BinaryTree::BinaryTree(int n)
 }
 
 // Вспомогательный метод создания дерева
-BinaryTree::Node *BinaryTree::createBinaryTree(int n)
+BinaryTree::Node *BinaryTree::createBinaryTree(int numNodes)
 {
-    if (n == 0)
+    if (numNodes == 0)
         return nullptr;
-    Node *q = new Node(rand() % 100);
-    int n1;
-    n1 = n / 2;
-    q->left = createBinaryTree(n1);
-    q->right = createBinaryTree(n - 1 - n1);
-    return q;
+    Node *newNode = new Node(rand() % 100);
+    int leftSubtreeSize = numNodes / 2;
+    newNode->left = createBinaryTree(leftSubtreeSize);
+    newNode->right = createBinaryTree(numNodes - 1 - leftSubtreeSize);
+    return newNode;
 }
 
 // Конструктор копирования
-BinaryTree::BinaryTree(const BinaryTree &T)
+BinaryTree::BinaryTree(const BinaryTree &other)
 {
-    if (T.root == nullptr)
+    if (other.root == nullptr)
         root = nullptr;
     else
     {
-        root = new Node(T.root->key);
-        root->left = copyTree(T.root->left);
-        root->right = copyTree(T.root->right);
+        root = new Node(other.root->key);
+        root->left = copyTree(other.root->left);
+        root->right = copyTree(other.root->right);
     }
 }
 
-//Вспомогательный метод для копирования
-BinaryTree::Node *BinaryTree::copyTree(Node *q)
+// Вспомогательный метод для копирования
+BinaryTree::Node *BinaryTree::copyTree(Node *sourceNode)
 {
-    if (q == nullptr)
+    if (sourceNode == nullptr)
         return nullptr;
-    Node *p = new Node(q->key);
-    p->left = copyTree(q->left);
-    p->right = copyTree(q->right);
-    return p;
+    Node *copiedNode = new Node(sourceNode->key);
+    copiedNode->left = copyTree(sourceNode->left);
+    copiedNode->right = copyTree(sourceNode->right);
+    return copiedNode;
 }
 
-//Деструктор
+// Деструктор
 BinaryTree::~BinaryTree()
 {
     deleteTree(root);
 }
 
-//Вспомогательный метод для деструктора
-void BinaryTree::deleteTree(Node *q)
+// Вспомогательный метод для деструктора
+void BinaryTree::deleteTree(Node *sourceNode)
 {
-    if (q == nullptr)
+    if (sourceNode == nullptr)
         return;
-    deleteTree(q->left);
-    deleteTree(q->right);
-    delete q;
+    deleteTree(sourceNode->left);
+    deleteTree(sourceNode->right);
+    delete sourceNode;
 }
 
-//Метод для получения корня
+// Метод для получения корня
 BinaryTree::Node *BinaryTree::getRoot()
 {
     return root;
 }
 
-//Метод для вывода дерева
+// Метод для вывода дерева
 void BinaryTree::printTree()
 {
     if (root == nullptr)
@@ -82,40 +81,41 @@ void BinaryTree::printTree()
     printTree(root, 0);
 }
 
-//Вспомогательный метод вывода дерева
-void BinaryTree::printTree(Node *q, int k)
+// Вспомогательный метод вывода дерева
+void BinaryTree::printTree(Node *currentNode, int indentation)
 {
-    if (q == nullptr)
+    if (currentNode == nullptr)
         return;
-    printTree(q->right, k + 3);
-    for (int i = 0; i < k; i++)
+    printTree(currentNode->right, indentation + 3);
+    for (int i = 0; i < indentation; i++)
     {
         std::cout << " ";
     }
     std::cout.width(2);
-    std::cout << q->key << std::endl;
-    printTree(q->left, k + 3);
+    std::cout << currentNode->key << std::endl;
+    printTree(currentNode->left, indentation + 3);
 }
 
-//Метод обхода Л-К-П
+// Метод обхода Л-К-П
 int BinaryTree::LNR(int *a)
 {
-    int k = 0;
-    LNR(root, a, k);
-    return k;
+    int count = 0;
+    LNR(root, a, count);
+    return count;
 }
 
-//Вспомогательный метод для обхода Л-К-П
-void BinaryTree::LNR(Node *q, int *a, int &k)
+// Вспомогательный метод для обхода Л-К-П
+void BinaryTree::LNR(Node *currentNode, int *array, int &index)
 {
-    if (q == nullptr)
+    if (currentNode == nullptr)
         return;
-    LNR(q->left, a, k);
-    a[k++] = q->key;
-    LNR(q->right, a, k);
+    LNR(currentNode->left, array, index);
+    array[index++] = currentNode->key;
+    LNR(currentNode->right, array, index);
 }
 
-//Метод для поиска минимального
+
+// Метод для поиска минимального
 int BinaryTree::min()
 {
     if (root == nullptr)
@@ -126,41 +126,56 @@ int BinaryTree::min()
     return min(root);
 }
 
-int BinaryTree::min(Node *q)
+//Вспомогательный метод для поиска минимального ключа
+int BinaryTree::min(Node *currentNode)
 {
-    int m, m1;
-    m = q->key;
-    if (q->left)
+    int currentMin, leftMin, rightMin;
+    currentMin = currentNode->key;
+    if (currentNode->left)
     {
-        m1 = min(q->left);
-        if (m1 < m)
-            m = m1;
+        leftMin = min(currentNode->left);
+        if (leftMin < currentMin)
+            currentMin = leftMin;
     }
-    if (q->right)
+    if (currentNode->right)
     {
-        m1 = min(q->right);
-        if (m1 < m)
-            m = m1;
+        rightMin = min(currentNode->right);
+        if (rightMin < currentMin)
+            currentMin = rightMin;
     }
-    return m;
+    return currentMin;
 }
 
-int BinaryTree::max() {
-    if (root == nullptr) {
-        // Если дерево пустое, возвращаем -1 или другое значение по умолчанию
-        return -1; // Пример значения по умолчанию
+// Метод для поиска минимального
+int BinaryTree::max()
+{
+    if (root == nullptr)
+    {
+        std::cout << "Дерево пустое";
+        return -1;
     }
-
-    // Ищем самый правый узел, это будет максимальное значение в дереве
-    Node *current = root;
-    while (current->right != nullptr) {
-        current = current->right;
-    }
-
-    return current->key;
+    return max(root);
 }
 
-
+//Метод поиска максимального
+int BinaryTree::max(Node *currentNode)
+{
+    int currentMax, leftMax, rightMax;
+    currentMax = currentNode->key;
+    if (currentNode->left)
+    {
+        leftMax = max(currentNode->left);
+        if (leftMax > currentMax)
+            currentMax = leftMax;
+    }
+    if (currentNode->right)
+    {
+        rightMax = max(currentNode->right);
+        if (rightMax > currentMax)
+            currentMax = rightMax;
+    }
+    return currentMax;
+}
 
 void BinaryTree::leaves()
 {
