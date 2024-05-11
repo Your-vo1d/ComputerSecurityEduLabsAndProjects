@@ -53,7 +53,6 @@ BinaryTree::~BinaryTree()
 {
     deleteTree(root);
 }
-
 // Вспомогательный метод для деструктора
 void BinaryTree::deleteTree(Node *sourceNode)
 {
@@ -75,10 +74,12 @@ void BinaryTree::printTree()
 {
     if (root == nullptr)
     {
-        std::cout << "Дерево пустое";
+        std::cout << "Дерево пустое" << std::endl;
         return;
     }
     printTree(root, 0);
+    std::cout << std::endl;
+    std::cout << std::endl;
 }
 
 // Вспомогательный метод вывода дерева
@@ -114,7 +115,6 @@ void BinaryTree::LNR(Node *currentNode, int *array, int &index)
     LNR(currentNode->right, array, index);
 }
 
-
 // Метод для поиска минимального
 int BinaryTree::min()
 {
@@ -126,7 +126,7 @@ int BinaryTree::min()
     return min(root);
 }
 
-//Вспомогательный метод для поиска минимального ключа
+// Вспомогательный метод для поиска минимального ключа
 int BinaryTree::min(Node *currentNode)
 {
     int currentMin, leftMin, rightMin;
@@ -157,7 +157,7 @@ int BinaryTree::max()
     return max(root);
 }
 
-//Метод поиска максимального
+// Метод поиска максимального
 int BinaryTree::max(Node *currentNode)
 {
     int currentMax, leftMax, rightMax;
@@ -185,6 +185,7 @@ void BinaryTree::leaves()
         return;
     }
     leaves(root);
+    std::cout << std::endl;
 }
 
 void BinaryTree::leaves(Node *q)
