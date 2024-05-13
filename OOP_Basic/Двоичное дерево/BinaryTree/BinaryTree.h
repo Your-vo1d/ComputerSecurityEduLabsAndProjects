@@ -5,53 +5,34 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <queue>
+#include "../Node/Node.h"
 
-class BinaryTree
-{
+class BinaryTree {
 public:
-    class Node
-    {
-    public:
-        int key;
-        Node *left, *right;
-
-        Node(int k = 0, Node *l = nullptr, Node *r = nullptr)
-        {
-            key = k;
-            left = l;
-            right = r;
-        }
-
-        ~Node()
-        {
-            left = nullptr;
-            right = nullptr;
-        }
-    };
-
-    Node *root;
-
-public:
+    Node* root;
     BinaryTree();
     BinaryTree(int n);
-    BinaryTree(const BinaryTree &);
-    ~BinaryTree(); 
-    Node *getRoot();
+    BinaryTree(const BinaryTree&);
+    ~BinaryTree();
+    BinaryTree operator=(const BinaryTree& other);
+    Node* getRoot();
     void printTree();
-    int LNR(int *);
+    int NLR(int*);
     virtual int min();
     virtual int max();
     void leaves();
 
 private:
-    Node *createBinaryTree(int n);
-    Node *copyTree(Node *);
-    void deleteTree(Node *);
-    void printTree(Node *, int);
-    void LNR(Node *, int *, int &);
-    int min(Node *);
-    int max(Node *);
-    void leaves(Node *);
+    void copyNodes(Node* src, Node*& dest);
+    Node* createBinaryTree(int n);
+    Node* copyTree(Node*);
+    void deleteTree(Node*);
+    void printTree(Node*, int);
+    void NLR(Node*, int*, int&);
+    int min(Node*);
+    int max(Node*);
+    void leaves(Node*);
 };
 
 #endif // BINARYTREE_H
