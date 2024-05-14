@@ -1,6 +1,0 @@
-﻿  BigNumberLib.cpp
-C:\Users\Void\Documents\4 семестр\Lab_2nd_years\OOP_Basic\Class Big Number\BigNumber\BigNumber\BigNumberLib.cpp(33,17): warning C4984: "if constexpr" — расширение языка C++17
-C:\Users\Void\Documents\4 семестр\Lab_2nd_years\OOP_Basic\Class Big Number\BigNumber\BigNumber\BigNumberLib.cpp(229,21): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-  Main.cpp
-  Создание кода...
-  BigNumber.vcxproj -> C:\Users\Void\Documents\4 семестр\Lab_2nd_years\OOP_Basic\Class Big Number\BigNumber\x64\Debug\BigNumber.exe
