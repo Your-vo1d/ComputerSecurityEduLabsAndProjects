@@ -16,87 +16,121 @@ BinarySearchTree::BinarySearchTree(int n)
     }
 }
 
-BinarySearchTree::BinarySearchTree(const std::vector<int> &vec) {
+BinarySearchTree::BinarySearchTree(const std::vector<int> &vec)
+{
     root = nullptr;
-    for (int key: vec) {
+    for (int key : vec)
+    {
         root = addNode(root, key);
     }
 }
 
-Node* BinarySearchTree::addNode(Node* root, int key) {
-    Node* newNode = new Node(key);
+Node *BinarySearchTree::addNode(Node *root, int key)
+{
+    Node *newNode = new Node(key);
 
-    if (root == nullptr) {
+    if (root == nullptr)
+    {
         return newNode;
     }
 
-    Node* current = root;
-    Node* parent = nullptr;
+    Node *current = root;
+    Node *parent = nullptr;
 
-    while (current != nullptr) {
+    while (current != nullptr)
+    {
         parent = current;
-        if (key < current->key) {
+        if (key < current->key)
+        {
             current = current->left;
-        } else if (key > current->key) {
+        }
+        else if (key > current->key)
+        {
             current = current->right;
-        } else { // Если ключ уже существует, освобождаем выделенную память и возвращаем исходный корень
+        }
+        else
+        { // Если ключ уже существует, освобождаем выделенную память и возвращаем исходный корень
             delete newNode;
             return root;
         }
     }
 
-    if (key < parent->key) {
+    if (key < parent->key)
+    {
         parent->left = newNode;
-    } else {
+    }
+    else
+    {
         parent->right = newNode;
     }
 
     return root;
 }
 
-
-Node* BinarySearchTree::removeNode(Node* root, int key) {
-    Node* current = root;
-    Node* parent = nullptr;
+Node *BinarySearchTree::removeNode(Node *root, int key)
+{
+    Node *current = root;
+    Node *parent = nullptr;
 
     // Поиск узла для удаления
-    while (current != nullptr && current->key != key) {
+    while (current != nullptr && current->key != key)
+    {
         parent = current;
-        if (key < current->key) {
+        if (key < current->key)
+        {
             current = current->left;
-        } else {
+        }
+        else
+        {
             current = current->right;
         }
     }
 
     // Если узел для удаления не найден
-    if (current == nullptr) {
+    if (current == nullptr)
+    {
         return root;
     }
 
     // У узла нет либо одного, либо обоих дочерних узлов
-    if (current->left == nullptr) {
-        if (parent == nullptr) { // Удаляемый узел - корень дерева
+    if (current->left == nullptr)
+    {
+        if (parent == nullptr)
+        { // Удаляемый узел - корень дерева
             root = current->right;
-        } else if (current == parent->left) {
+        }
+        else if (current == parent->left)
+        {
             parent->left = current->right;
-        } else {
+        }
+        else
+        {
             parent->right = current->right;
         }
         delete current;
-    } else if (current->right == nullptr) {
-        if (parent == nullptr) { // Удаляемый узел - корень дерева
+    }
+    else if (current->right == nullptr)
+    {
+        if (parent == nullptr)
+        { // Удаляемый узел - корень дерева
             root = current->left;
-        } else if (current == parent->left) {
+        }
+        else if (current == parent->left)
+        {
             parent->left = current->left;
-        } else {
+        }
+        else
+        {
             parent->right = current->left;
         }
         delete current;
-    } else { // У узла есть два дочерних узла
+    }
+    else
+    { // У узла есть два дочерних узла
         // Находим наименьший узел в правом поддереве (минимальный узел в правом поддереве)
-        Node* successor = current->right;
-        while (successor->left != nullptr) {
+        Node *successor = current->right;
+        while (successor->left != nullptr)
+        {
             parent = successor;
             successor = successor->left;
         }
@@ -105,16 +139,18 @@ Node* BinarySearchTree::removeNode(Node* root, int key) {
         current->key = successor->key;
 
         // Удаляем наименьший узел в правом поддереве
-        if (parent != nullptr) {
+        if (parent != nullptr)
+        {
             parent->left = removeNode(parent->left, successor->key);
-        } else {
+        }
+        else
+        {
             current->right = removeNode(current->right, successor->key);
         }
     }
 
     return root;
 }
-
 
 Node *BinarySearchTree::minNode(Node *node)
 {
@@ -125,22 +161,25 @@ Node *BinarySearchTree::minNode(Node *node)
     return current;
 }
 
-Node * BinarySearchTree::findNode(Node *node, int key) {
-    while (node != nullptr) {
-        if (node->key == key) {
+Node *BinarySearchTree::findNode(Node *node, int key)
+{
+    while (node != nullptr)
+    {
+        if (node->key == key)
+        {
             return node;
         }
-        if (key < node->key) {
+        if (key < node->key)
+        {
             node = node->left;
-        } else {
+        }
+        else
+        {
             node = node->right;
         }
     }
     return nullptr; // Возвращаем nullptr, если узел не найден
 }
-
-
-
 
 int BinarySearchTree::min()
 {

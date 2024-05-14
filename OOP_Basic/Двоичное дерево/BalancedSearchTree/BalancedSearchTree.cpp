@@ -1,7 +1,8 @@
 #include "BalancedSearchTree.h"
 #include <algorithm>
 
-BalancedSearchTree::BalancedSearchTree(int n) {
+BalancedSearchTree::BalancedSearchTree(int n)
+{
     root = nullptr; // Инициализируем корень как nullptr
     bool isFixed = false;
     std::vector<int> keys;
@@ -16,6 +17,6 @@ BalancedSearchTree::BalancedSearchTree(int n) {
     }
 }
 
-Node *BalancedSearchTree::addNode(Node *root, int key) {
-    
+Node *BalancedSearchTree::addNode(Node *root, int key)
+{
 }

@@ -12,6 +12,7 @@ public:
 
     // Переопределение метода добавления узла
     virtual Node *addNode(Node *root, int key) override;
+
 private:
     // Вспомогательные методы для балансировки дерева
     Node *balance(Node *root, bool &isFixed);

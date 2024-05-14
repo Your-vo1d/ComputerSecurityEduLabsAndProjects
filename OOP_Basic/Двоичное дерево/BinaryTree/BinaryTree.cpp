@@ -83,8 +83,10 @@ void BinaryTree::printTree()
     std::cout << std::endl;
 }
 
-void BinaryTree::copyNodes(Node* src, Node*& dest) {
-    if (src == nullptr) {
+void BinaryTree::copyNodes(Node *src, Node *&dest)
+{
+    if (src == nullptr)
+    {
         dest = nullptr;
         return;
     }
@@ -93,8 +95,10 @@ void BinaryTree::copyNodes(Node* src, Node*& dest) {
     copyNodes(src->right, dest->right);
 }
 
-BinaryTree BinaryTree::operator=(const BinaryTree &other) {
-    if (this != &other) {
+BinaryTree BinaryTree::operator=(const BinaryTree &other)
+{
+    if (this != &other)
+    {
         delete root;
         root = nullptr;
         copyNodes(other.root, root);
@@ -130,11 +134,10 @@ void BinaryTree::NLR(Node *currentNode, int *array, int &index)
 {
     if (currentNode == nullptr)
         return;
-    array[index++] = currentNode->key; // Посещаем корень
-    NLR(currentNode->left, array, index); // Обходим левое поддерево
+    array[index++] = currentNode->key;     // Посещаем корень
+    NLR(currentNode->left, array, index);  // Обходим левое поддерево
     NLR(currentNode->right, array, index); // Обходим правое поддерево
 }
-
 
 // Метод для поиска минимального
 int BinaryTree::min()
@@ -211,22 +214,27 @@ void BinaryTree::leaves()
 }
 
 // Вспомогательный метод обхода дерева по уровням
-void BinaryTree::leaves(Node *q) {
-    if (root == nullptr) {
+void BinaryTree::leaves(Node *q)
+{
+    if (root == nullptr)
+    {
         return;
     }
 
     std::queue<Node *> unprocessedNodes;
     unprocessedNodes.push(root);
 
-    while (!unprocessedNodes.empty()) {
+    while (!unprocessedNodes.empty())
+    {
         Node *node = unprocessedNodes.front();
         unprocessedNodes.pop();
         std::cout << node->key << ' ';
-        if (node->left) {
+        if (node->left)
+        {
             unprocessedNodes.push(node->left);
         }
-        if (node->right) {
+        if (node->right)
+        {
             unprocessedNodes.push(node->right);
         }
     }
