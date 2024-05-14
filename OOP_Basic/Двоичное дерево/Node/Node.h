@@ -11,7 +11,7 @@ public:
     Node* left;
     Node* right;
 
-    Node(int k = 0, Node* l = nullptr, Node* r = nullptr, int b = 0, int h = 0);
+    Node(int k = 0, Node* l = nullptr, Node* r = nullptr, int b = 0);
     ~Node();
     int getBalance();
 private:
