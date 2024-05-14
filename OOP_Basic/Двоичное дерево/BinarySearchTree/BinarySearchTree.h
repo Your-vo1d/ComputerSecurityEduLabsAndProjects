@@ -11,7 +11,7 @@ public:
     BinarySearchTree(const std::vector<int> &vec);
     virtual int min();
     virtual int max();
-    virtual BinaryTree::Node *addNode(Node *root, int key);
+    virtual Node *addNode(Node *root, int key);
     virtual Node *removeNode(Node *root, int key);
     Node *findNode(Node *root, int key);
     Node *minNode(Node *root);
