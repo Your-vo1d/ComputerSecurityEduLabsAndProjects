@@ -4,43 +4,21 @@
 #include <limits>
 #include "BinaryTree/BinaryTree.h"
 #include "BinarySearchTree/BinarySearchTree.h"
+#include "BalancedSearchTree/BalancedSearchTree.h"
 
 int main() {
-    // Инициализация генератора случайных чисел
-    srand(time(NULL));
-
-    // Создание объектов BinaryTree
-    BinaryTree initialTree(10), copiedTree(initialTree), emptyTree;
-
-    // Вывод информации о BinaryTree
-    std::cout << "Дерево, созданное конструктором с параметром" << std::endl;
-    initialTree.printTree();
-    std::cout << "Дерево, созданное конструктором копирования" << std::endl;
-    copiedTree.printTree();
-    std::cout << "Дерево, созданное конструктором по умолчанию:" << std::endl;
-    emptyTree.printTree();
-    std::cout << "Минимальное значение: " << initialTree.min() << std::endl;
-    std::cout << "Максимальное значение: " << initialTree.max() << std::endl;
-    std::cout << "Обход по уровням: ";
-    initialTree.leaves();
-    std::cout << "Обход Л-К-П: ";
-    int arrayLNR[10];
-    initialTree.LNR(arrayLNR);
-    for (int i = 0; i < 10; i++) {
-        std::cout << arrayLNR[i] << " ";
-    }
-    std::cout << std::endl;
-
-    std::cout << std::endl;
     std::cout << "____________Деревья поиска____________" << std::endl;
     std::cout << std::endl;
 
     // Создание объектов BinarySearchTree
     BinarySearchTree initialSearchTree(10), copiedSearchTree(initialSearchTree), emptySearchTree;
-
+    BinarySearchTree copySearchTree;
+    copySearchTree = initialSearchTree;
     // Вывод информации о BinarySearchTree
     std::cout << "Дерево поиска, созданное конструктором с параметром (кол-во элементов дерева)" << std::endl;
     initialSearchTree.printTree();
+    std::cout << "Дерево поиска, равное дереву поиска, созданного конструктором с параметром (кол-ва элементов)" << std::endl;
+    copySearchTree.printTree();
     std::cout << "Дерево поиска, созданное конструктором копирования" << std::endl;
     copiedSearchTree.printTree();
     std::cout << "Дерево поиска, созданное конструктором по умолчанию" << std::endl;
@@ -75,9 +53,11 @@ int main() {
     std::cout << "Максимальное значение: " << initialSearchTree.max() << std::endl;
     std::cout << "Обход по уровням: ";
     initialSearchTree.leaves();
-    std::cout << "Обход Л-К-П: ";
+    std::cout << "Обход К-Л-П: ";
     int arraySearchLNR[10];
-    initialSearchTree.LNR(arraySearchLNR);
+    for (int i = 0; i < 10; i++)
+        arraySearchLNR[i] = 0;
+    initialSearchTree.NLR(arraySearchLNR);
     for (int i = 0; i < 10; i++) {
         std::cout << arraySearchLNR[i] << " ";
     }
@@ -90,7 +70,9 @@ int main() {
     initialSearchTree.printTree();
 
     // Поиск и удаление узла
-    BinaryTree::Node *nodeToRemove = initialSearchTree.findNode(initialSearchTree.getRoot(), keyToAdd);
+    Node *nodeToRemove = nullptr;
+    std::cin >> keyToAdd;
+    nodeToRemove = initialSearchTree.findNode(initialSearchTree.getRoot(), keyToAdd);
     if (nodeToRemove != nullptr) {
         initialSearchTree.removeNode(initialSearchTree.getRoot(), keyToAdd);
         std::cout << "Узел с ключом " << keyToAdd << " успешно удален из дерева." << std::endl;
@@ -109,6 +91,10 @@ int main() {
     }
     treeVector.removeNode(treeVector.getRoot(), value);
     treeVector.printTree();
-
+    std::cout << "____________Деревья поиска____________" << std::endl;
+    BalancedSearchTree tmp(10);
+    tmp.printTree();
+        std::cout << "____________Деревья поиска____________" << std::endl;
+        std::cout << "____________Деревья поиска____________" << std::endl;
     return 0;
 }
