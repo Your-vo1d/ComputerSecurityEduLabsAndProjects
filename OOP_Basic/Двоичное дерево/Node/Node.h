@@ -7,15 +7,12 @@
 class Node {
 public:
     int key;
-    int balance;
+    int height;
     Node* left;
     Node* right;
 
-    Node(int k = 0, Node* l = nullptr, Node* r = nullptr, int b = 0);
+    Node(int k = 0, Node* l = nullptr, Node* r = nullptr, int b = 1);
     ~Node();
-    int getBalance();
-private:
-    int calculateHeight(Node* node) const;
 };
 
 #endif // NODE_H
