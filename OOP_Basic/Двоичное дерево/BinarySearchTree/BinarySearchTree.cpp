@@ -96,7 +96,7 @@ Node *BinarySearchTree::removeNode(Node *root, int key)
     if (current->left == nullptr)
     {
         if (parent == nullptr)
-        { // Удаляемый узел - корень дерева
+        { 
             root = current->right;
         }
         else if (current == parent->left)
@@ -129,6 +129,7 @@ Node *BinarySearchTree::removeNode(Node *root, int key)
     { // У узла есть два дочерних узла
         // Находим наименьший узел в правом поддереве (минимальный узел в правом поддереве)
         Node *successor = current->right;
+        parent = nullptr;
         while (successor->left != nullptr)
         {
             parent = successor;
@@ -141,11 +142,11 @@ Node *BinarySearchTree::removeNode(Node *root, int key)
         // Удаляем наименьший узел в правом поддереве
         if (parent != nullptr)
         {
-            parent->left = removeNode(parent->left, successor->key);
+            parent->left = successor->right;
         }
         else
         {
-            current->right = removeNode(current->right, successor->key);
+            current->right = successor->right;
         }
     }
 
