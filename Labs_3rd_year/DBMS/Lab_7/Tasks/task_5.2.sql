@@ -1,15 +1,17 @@
 SELECT
-    m.employee_id AS manager_id,
-    m.first_name || ' ' || m.last_name AS manager_name,
-    (SELECT SUM(e.salary)
-     FROM employees e
-     WHERE e.manager_id = m.employee_id) AS total_salary,
-    (SELECT round(AVG(e.salary), 2)
-     FROM employees e
-     WHERE e.manager_id = m.employee_id) AS avg_salary
+    M.FIRST_NAME || ' ' || M.LAST_NAME AS MANAGER_NAME,
+    E.SUM_SALARY
 FROM
-    employees m
-WHERE
-    EXISTS (SELECT 1 FROM employees e WHERE e.manager_id = m.employee_id)
+    EMPLOYEES M
+    JOIN (
+        SELECT
+            SUM(E.SALARY) AS SUM_SALARY,
+            AVG(E.SALARY) AS AVG_SALARY,
+            E.MANAGER_ID
+        FROM
+            EMPLOYEES E
+        GROUP BY
+            E.MANAGER_ID
+    ) E ON E.MANAGER_ID = M.EMPLOYEE_ID
 ORDER BY
-    avg_salary DESC;
+    E.AVG_SALARY DESC

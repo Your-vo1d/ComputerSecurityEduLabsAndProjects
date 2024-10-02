@@ -1,13 +1,17 @@
-SELECT
-    m.employee_id AS manager_id,
-    m.first_name || ' ' || m.last_name AS manager_name,
-    SUM(e.salary) AS total_salary,
-    round(AVG(e.salary), 2) AS avg_salary
-FROM
-    employees e
-JOIN
-    employees m ON e.manager_id = m.employee_id
-GROUP BY
-    m.employee_id, m.first_name, m.last_name
-ORDER BY
-    avg_salary DESC;
+SELECT 
+    M.FIRST_NAME || ' ' || M.LAST_NAME AS MANAGER_NAME,
+    SUM(E.SALARY) AS TOTAL_SALARY
+FROM 
+    EMPLOYEES E
+JOIN 
+    EMPLOYEES M ON E.MANAGER_ID = M.EMPLOYEE_ID
+GROUP BY 
+    M.EMPLOYEE_ID, M.FIRST_NAME, M.LAST_NAME
+HAVING 
+    (SELECT AVG(E2.SALARY)
+     FROM EMPLOYEES E2
+     WHERE E2.MANAGER_ID = M.EMPLOYEE_ID) IS NOT NULL
+ORDER BY 
+    (SELECT AVG(E2.SALARY)
+     FROM EMPLOYEES E2
+     WHERE E2.MANAGER_ID = M.EMPLOYEE_ID) DESC
