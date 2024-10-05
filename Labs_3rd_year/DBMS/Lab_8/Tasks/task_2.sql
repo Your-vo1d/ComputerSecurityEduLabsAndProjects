@@ -1,0 +1,39 @@
+WITH RECURSIVE
+	SUBORDINATEHIERARCHY AS (
+		-- Начальный уровень: все сотрудники, у которых есть подчиненные
+		SELECT
+			E.EMPLOYEE_ID,
+			E.MANAGER_ID,
+			1 AS LEVEL
+		FROM
+			EMPLOYEES E
+		WHERE
+			E.MANAGER_ID IS NOT NULL
+		UNION ALL
+		-- Рекурсивный шаг: находим всех подчиненных всех уровней
+		SELECT
+			E.EMPLOYEE_ID,
+			SH.MANAGER_ID,
+			SH.LEVEL + 1
+		FROM
+			EMPLOYEES E
+			JOIN SUBORDINATEHIERARCHY SH ON E.MANAGER_ID = SH.EMPLOYEE_ID
+	)
+	-- Считаем количество подчиненных для каждого менеджера
+SELECT
+	M.EMPLOYEE_ID,
+	M.LAST_NAME || ' ' || SUBSTRING(M.FIRST_NAME, 1, 1) || '.' AS MANAGER_NAME,
+	COUNT(SH.EMPLOYEE_ID) AS TOTAL_SUBORDINATES
+FROM
+	SUBORDINATEHIERARCHY SH
+	JOIN EMPLOYEES M ON M.EMPLOYEE_ID = SH.MANAGER_ID
+GROUP BY
+	M.EMPLOYEE_ID,
+	M.LAST_NAME,
+	M.FIRST_NAME
+HAVING
+	COUNT(SH.EMPLOYEE_ID) > 1
+ORDER BY
+	TOTAL_SUBORDINATES DESC -- Сортировка по количеству подчиненных в порядке убывания
+LIMIT
+	7
