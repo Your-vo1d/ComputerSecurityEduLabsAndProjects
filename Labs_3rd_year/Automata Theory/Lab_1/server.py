@@ -16,7 +16,7 @@ class FTPStateMachine:
         self.log.append(f"State: {self.state}, Command: {command}, Response: {response}")
         print(f"Current state: {self.state}, Command: {command}, Response: {response}")
 
-        if self.state == "S0":
+        if self.state == "S0": # Начальное состояние
             if command == "USER correct_user":
                 self.state = "S1"  # Пользователь найден, запрос пароля
             elif command == "USER error_user":
@@ -24,18 +24,23 @@ class FTPStateMachine:
             elif command == "PASS correct_pass" or command == "PASS error_pass":
                 self.state = "S0"  # Сначала требуется ввести логин
 
-        elif self.state == "S1":
+        elif self.state == "S1": # Введен верный логин
             if command == "PASS correct_pass":
-                self.state = "S2"  # Успешная аутентификация
+                self.state = "S3"  # Успешная аутентификация
             elif command == "PASS error_pass":
                 self.state = "S0"  # Неверный пароль, сброс состояния
             elif command == "USER correct":
                 self.state = "S1"  # Если команда USER введена снова в состоянии S1, сброс состояния
             elif command == "USER error_user":
                 self.state = "s2"
-        elif self.state == "S2":
-            if command in ["LIST", "RETR", "STOR", "SIZE"] and "226" in response:
-                self.state = "S3"  # Успешное выполнение команды
+        elif self.state == "S2": # Введен неверный логин
+            if command == "USER correct_user":
+                self.state = "S1"  # Пользователь найден, запрос пароля
+            elif command == "USER error_user":
+                self.state = "S2"        
+            elif command == "PASS correct_pass" or command == "PASS error_pass":
+                self.state = "S0"  # Сначала требуется ввести логин
+
         elif self.state == "S3":
             if command == "QUIT" and "221" in response:
                 self.state = "S4"  # Завершение сеанса
