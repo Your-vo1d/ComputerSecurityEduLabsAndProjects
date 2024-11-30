@@ -87,7 +87,6 @@ class CustomFTPHandler(FTPHandler):
             self.respond("550 File not found")  # Ошибка, если файл не найден
             self.state_machine.transition("RETR", "550")
 
-
 def run_ftp_server():
     # Авторизатор для управления пользователями
     authorizer = DummyAuthorizer()
@@ -147,6 +146,25 @@ def test_ftp_server(test_cases):
     ftp.close()
     return commands, results
 
+def read_test_cases_from_file(file_path):
+    test_cases = []
+    try:
+        with open(file_path, "r") as file:
+            for line in file:
+                line = line.strip()
+                if line and not line.startswith("#"):  # Пропускаем пустые строки и комментарии
+                    parts = line.split(",")
+                    if len(parts) == 2:
+                        command = parts[0].strip()
+                        expected_response = parts[1].strip()
+                        test_cases.append((command, expected_response))
+                    else:
+                        print(f"Skipping invalid line: {line}")
+    except FileNotFoundError:
+        print(f"Test cases file not found: {file_path}")
+    except Exception as e:
+        print(f"Error reading test cases file: {e}")
+    return test_cases
 
 # Функция для записи в файлы
 def write_to_files(commands, results):
@@ -174,7 +192,7 @@ if __name__ == "__main__":
     ("USER correct_user", "331"),   # Повторное подключение
     ("PASS 12345", "230")           # Успешный вход после QUIT
     ]
-
+    ts = read_test_cases_from_file("test_case.txt")
     # Тестируем сервер и получаем список команд и результатов
     commands, results = test_ftp_server(test_cases)
 
@@ -182,3 +200,4 @@ if __name__ == "__main__":
     write_to_files(commands, results)
 
     print("Commands and results have been written to files.")
+    print("fdsfsd", ts)
