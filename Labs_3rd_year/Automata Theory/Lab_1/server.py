@@ -4,9 +4,11 @@ from pyftpdlib.servers import FTPServer
 from ftplib import FTP
 from threading import Thread
 import os
+import logging
 
-# Модель конечного автомата для управления состояниями FTP-сервера
-
+# Настройка логирования
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 # Настройка FTP-сервера с конечным автоматом
 class CustomFTPHandler(FTPHandler):
@@ -14,33 +16,29 @@ class CustomFTPHandler(FTPHandler):
         super().__init__(*args, **kwargs)
 
     def on_connect(self):
-        print("Client connected")
+        logger.debug("Client connected")
 
     def on_login(self, username):
-        print(f"User {username} logged in")
-        if username == "error_user":
-            self.respond("331 Invalid user")  # Возвращаем ошибку для неверного пользователя
-
+        logger.debug(f"User {username} logged in")
 
     def on_password(self, password):
-        print(f"Password entered: {password}")
+        logger.debug(f"Password entered: {password}")
 
     def on_disconnect(self):
-        print("Client disconnected")
+        logger.debug("Client disconnected")
 
-    def on_retr(self, filename):
-        """Обработка команды RETR (загрузка файла) в бинарном режиме"""
-        if filename == "correct_file.txt":
-            try:
-                with open(filename, "rb") as file:
-                    self.respond("150 Opening data connection.")
-                    self.push_file(file)  # push_file уже передает данные через FTP
-                    self.respond("226 Transfer complete.")  # Успешное завершение передачи
-            except FileNotFoundError:
-                self.respond("550 File not found")  # Ошибка, если файл не найден
+    def on_size(self, filename):
+        """Обработка команды SIZE"""
+        # Проверка наличия файла
+        if os.path.exists(filename):
+            logger.debug("YEEEEEEEEEEEEEEEEEEEEEEEEEEES")
+            file_size = os.path.getsize(filename)
+            self.respond(f"213 {file_size}")  # Код ответа 213: размер файла
         else:
-            self.respond("550 File not found")  # Ответ на ошибку, если файл не существует
+            self.respond("550 File not found")  # Ошибка, если файл не найден
 
+    def on_rein(self):
+        logger.debug("Received REIN command. Resetting server state.")
 
 def run_ftp_server():
     # Авторизатор для управления пользователями
@@ -57,9 +55,8 @@ def run_ftp_server():
     server = FTPServer(("0.0.0.0", 2121), handler)  # Используем порт 2121 для тестов
     server.timeout = 3000  # Увеличиваем тайм-аут для стабильности соединения
 
-    print("FTP-сервер запущен на порту 2121...")
+    logger.info("FTP-сервер запущен на порту 2121...")
     server.serve_forever()
-
 
 # Программа-тестировщик для проверки FTP-сервера
 def test_ftp_server(test_cases):
@@ -71,37 +68,52 @@ def test_ftp_server(test_cases):
     try:
         ftp.connect("localhost", 2121, timeout=300)  # Подключаемся к порту 2121
     except Exception as e:
+        logger.error(f"Connection failed: {e}")
         return
     for i in range(len(test_cases)):
         count = 0
-        print(test_cases[i])
+        logger.info(f"Running test case {i+1}")
         for j in range(len(test_cases[i])):
             test_case = test_cases[i][j]
             for command, expected_response in test_case.items():
                 try:
                     if command.startswith("USER"):
+                        # Обработка команды USER
                         username = command.split(" ")[1]
                         response = ftp.sendcmd(f"USER {username}")
-                        print("fdsfsdfsdfsfsdfsfdsf")
+                        logger.debug("USER command executed")
                     elif command.startswith("PASS"):
+                        # Обработка команды PASS
                         password = command.split(" ")[1]
                         try:
                             response = ftp.sendcmd(f"PASS {password}")
                         except Exception as temp_e:
                             response = str(temp_e)  # Сохраняем ошибку как ответ
                     elif command.startswith("RETR"):
+                        # Обработка команды RETR
                         filename = command.split(" ")[1]
                         try:
                             response = ftp.retrbinary(f"RETR {filename}", None)  # Пример команды RETR
                         except Exception as temp_e:
                             response = str(temp_e)
                     elif command.startswith("REIN"):
+                        # Обработка команды REIN
                         try:
                             response = ftp.sendcmd(f"REIN")
                         except Exception as temp_e:
                             response = str(temp_e)
+
                         ftp.quit()  # Завершаем сессию
                         ftp.connect("localhost", 2121)  # Переподключаемся
+                    elif command.startswith("SIZE"):
+                        # Обработка команды SIZE
+                        try:
+                            ftp.sendcmd("TYPE I")
+                            filename = command.split(" ")[1]
+                            logger.debug(f"Requesting SIZE for file: {filename}")
+                            response = ftp.sendcmd(f"SIZE {filename}")  # Отправляем команду SIZE
+                        except Exception as temp_e:
+                            response = str(temp_e)
                     if expected_response in str(response):
                         count += 1
                         results.append((command, "Passed"))
@@ -111,9 +123,9 @@ def test_ftp_server(test_cases):
                     results.append((command, f"Error - {e}"))
 
         if count == len(test_cases[i]):
-            test_results.append((f"Тест {i} is passed \n"))
+            test_results.append(f"Test {i} passed\n")
         else:
-            test_results.append((f"Тест {i} was not passed \n"))
+            test_results.append(f"Test {i} failed\n")
         count = 0
     ftp.close()
     return results, test_results
@@ -140,7 +152,7 @@ def read_test_file(file_path):
                 # Разделяем строку по двоеточию на команду и ответы
                 parts = line.split(":")
                 if len(parts) != 2:
-                    print(f"Некорректная строка (не найдено двоеточие): {line}. Пропускаем её.")
+                    logger.warning(f"Некорректная строка (не найдено двоеточие): {line}. Пропускаем её.")
                     continue
                 
                 # Разделяем команду и ответы
@@ -149,7 +161,7 @@ def read_test_file(file_path):
 
                 # Проверяем, что количество команд и ответов совпадает
                 if len(commands) != len(responses):
-                    print(f"Ошибка в строке (некорректное количество команд или ответов): {line}. Пропускаем её.")
+                    logger.warning(f"Ошибка в строке (некорректное количество команд или ответов): {line}. Пропускаем её.")
                     continue
                 # Заполняем итоговый список
                 for i in range(len(commands)):
@@ -157,9 +169,9 @@ def read_test_file(file_path):
                 result.append(temp)
 
     except FileNotFoundError:
-        print(f"Файл {file_path} не найден.")
+        logger.error(f"Файл {file_path} не найден.")
     except Exception as e:
-        print(f"Ошибка при обработке файла: {e}")
+        logger.error(f"Ошибка при обработке файла: {e}")
 
     return result
 
@@ -173,7 +185,6 @@ def write_to_files(results):
             else:
                 result_file.write("\n")  # Обработка "плохих" элементов
 
-
 # Основная функция для запуска FTP-сервера
 if __name__ == "__main__":
     # Запускаем сервер в отдельном потоке
@@ -183,13 +194,13 @@ if __name__ == "__main__":
     file_path = "test.txt"  # Укажите путь к вашему файлу
     test_cases = read_test_file(file_path)
 
-    ## Тестируем сервер и получаем список команд и результатов
+    # Тестируем сервер и получаем список команд и результатов
     results, test_results = test_ftp_server(test_cases)
-#
-    ## Записываем команды и результаты в файлы
+
+    # Записываем команды и результаты в файлы
     write_to_files(results)
     with open("test_results.txt", "w", encoding="utf-8") as test_result_file:
         for result in test_results:
             test_result_file.write(result)
-#
-    print("Commands and results have been written to files.")
+
+    logger.info("Commands and results have been written to files.")
