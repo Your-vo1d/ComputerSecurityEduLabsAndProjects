@@ -1,0 +1,1 @@
+CREATE INDEX idx_watchlist_user_id ON project_cinema.watchlists(user_id)
