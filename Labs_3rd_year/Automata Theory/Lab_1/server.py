@@ -14,31 +14,30 @@ logger = logging.getLogger(__name__)
 class CustomFTPHandler(FTPHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.permit_foreign_addresses = True
+        self.enable_size = True
 
-    def on_connect(self):
-        logger.debug("Client connected")
-
-    def on_login(self, username):
+    def ftp_USER(self, username):
         logger.debug(f"User {username} logged in")
+        super().ftp_USER(username)
 
-    def on_password(self, password):
+    def ftp_PASS(self, password):
         logger.debug(f"Password entered: {password}")
-
+        super().ftp_PASS(password)
     def on_disconnect(self):
         logger.debug("Client disconnected")
-
-    def on_size(self, filename):
+        super().on_disconnect()
+    def on_connect(self):
+        logger.debug("Client connected")
+        super().on_connect()
+    def ftp_SIZE(self, filename):
         """Обработка команды SIZE"""
         # Проверка наличия файла
-        if os.path.exists(filename):
-            logger.debug("YEEEEEEEEEEEEEEEEEEEEEEEEEEES")
-            file_size = os.path.getsize(filename)
-            self.respond(f"213 {file_size}")  # Код ответа 213: размер файла
-        else:
-            self.respond("550 File not found")  # Ошибка, если файл не найден
-
-    def on_rein(self):
-        logger.debug("Received REIN command. Resetting server state.")
+        super().ftp_SIZE(filename)
+    def ftp_REIN(self, line):
+        super().ftp_REIN(line)
+    def ftp_QUIT(self,line):
+        super().ftp_QUIT(line)
 
 def run_ftp_server():
     # Авторизатор для управления пользователями
@@ -102,9 +101,6 @@ def test_ftp_server(test_cases):
                             response = ftp.sendcmd(f"REIN")
                         except Exception as temp_e:
                             response = str(temp_e)
-
-                        ftp.quit()  # Завершаем сессию
-                        ftp.connect("localhost", 2121)  # Переподключаемся
                     elif command.startswith("SIZE"):
                         # Обработка команды SIZE
                         try:
@@ -127,6 +123,8 @@ def test_ftp_server(test_cases):
         else:
             test_results.append(f"Test {i} failed\n")
         count = 0
+        ftp.quit()  # Завершаем сессию
+        ftp.connect("localhost", 2121)  # Переподключаемся
     ftp.close()
     return results, test_results
 
@@ -191,7 +189,7 @@ if __name__ == "__main__":
     server_thread = Thread(target=run_ftp_server)
     server_thread.daemon = True
     server_thread.start()
-    file_path = "test.txt"  # Укажите путь к вашему файлу
+    file_path = "w-method.txt"  # Укажите путь к вашему файлу
     test_cases = read_test_file(file_path)
 
     # Тестируем сервер и получаем список команд и результатов
