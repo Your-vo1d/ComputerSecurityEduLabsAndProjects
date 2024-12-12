@@ -1,0 +1,35 @@
+#S0
+USER correct_user,PASS correct_pass,REIN,USER correct_user:331,230,230,331
+USER correct_user,PASS correct_pass,REIN,USER error_user:331,230,230,331
+USER correct_user,PASS correct_pass,REIN,PASS correct_pass:331,230,230,503
+USER correct_user,PASS correct_pass,REIN,PASS error_pass:331,230,230,503
+USER correct_user,PASS correct_pass,REIN,SIZE correct_file.txt:331,230,230,530
+USER correct_user,PASS correct_pass,REIN,SIZE error_file.txt:331,230,230,530
+USER correct_user,PASS correct_pass,REIN,REIN:331,230,230,530
+
+#S1
+USER correct_user,USER correct_user:331,331
+USER correct_user,USER error_user:331,331
+USER correct_user,PASS correct_pass:331,230
+USER correct_user,PASS error_pass:331,530
+USER correct_user,SIZE correct_file.txt:331,530
+USER correct_user,SIZE error_file.txt:331,530
+USER correct_user,REIN:331,530
+
+#S2
+USER error_user,USER correct_user:331,331
+USER error_user,USER error_user:331,331
+USER error_user,PASS correct_pass:331,530
+USER error_user,PASS error_pass:331,530
+USER error_user,SIZE correct_file.txt:331,530
+USER error_user,SIZE error_file.txt:331,530
+USER error_user,REIN:331,530
+
+#S3
+USER correct_user,PASS correct_pass,USER correct_user:331,230,331
+USER correct_user,PASS correct_pass,USER error_user:331,230,331
+USER correct_user,PASS correct_pass,PASS correct_pass:331,230,503
+USER correct_user,PASS correct_pass,PASS error_pass:331,230,503
+USER correct_user,PASS correct_pass,SIZE correct_file.txt:331,230,213
+USER correct_user,PASS correct_pass,SIZE error_file.txt:331,230,550
+USER correct_user,PASS correct_pass,REIN:331,230,230
