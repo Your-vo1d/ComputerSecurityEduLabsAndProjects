@@ -189,7 +189,7 @@ if __name__ == "__main__":
     server_thread = Thread(target=run_ftp_server)
     server_thread.daemon = True
     server_thread.start()
-    file_path = "w-method.txt"  # Укажите путь к вашему файлу
+    file_path = "graph-method.txt"  # Укажите путь к вашему файлу
     test_cases = read_test_file(file_path)
 
     # Тестируем сервер и получаем список команд и результатов
