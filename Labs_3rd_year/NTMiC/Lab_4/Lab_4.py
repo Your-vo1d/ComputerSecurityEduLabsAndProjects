@@ -1,4 +1,6 @@
 import random
+import time
+from functools import lru_cache
 
 
 def test_ferma(number: int, parameter: int) -> int:
@@ -12,7 +14,7 @@ def test_ferma(number: int, parameter: int) -> int:
             return 1
     return 0
 
-
+@lru_cache(maxsize=None)  # Неограниченный кэш
 def euler_phi(number: int) -> int:
     """
     Вычисляет функцию Эйлера для числа number.
@@ -43,7 +45,7 @@ def error_probability(number: int, iterations: int) -> None:
     """
     Вычисляет вероятность ошибки теста Ферма для числа number и количества итераций iterations.
     """
-    probability = (euler_phi(number) / number) ** iterations
+    probability = 1 - ((euler_phi(number) / number) ** iterations)
     print(f"Вероятность ошибки = {probability}")
 
 
@@ -51,7 +53,7 @@ def wrapper_test_ferma(number: int, parameter: int) -> None:
     """
     Обертка для теста Ферма, которая обрабатывает входные данные и выводит результат.
     """
-    if number <= 3:
+    if number <= 3 and number % 2 == 0:
         print("Число не подходит под условия\n")
     else:
         result = test_ferma(number, parameter)
@@ -69,19 +71,26 @@ def main() -> None:
     while True:
         try:
             number = int(input("Введите число для проверки на простоту: "))
-            break
+            if number <= 3 or number % 2 == 0:
+                print("Ошибка")
+            else:
+                break
         except ValueError:
             print("Пожалуйста, введите целое число.")
 
     while True:
         try:
             parameter = int(input("Введите количество итераций для теста Ферма: "))
-            break
+            if parameter <= 0:
+                print("Ошибка")
+            else:
+                break
         except ValueError:
             print("Пожалуйста, введите целое число.")
 
+    time_start = time.time()
     wrapper_test_ferma(number, parameter)
-
-
+    time_finish = time.time()
+    print(f"Время выполнения теста: {time_finish - time_start}")
 if __name__ == "__main__":
     main()
