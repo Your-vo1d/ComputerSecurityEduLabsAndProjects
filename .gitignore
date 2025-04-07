@@ -4,3 +4,4 @@ venv/
 *.pgerd
 *.pyc
 *.exe
+*.docx
