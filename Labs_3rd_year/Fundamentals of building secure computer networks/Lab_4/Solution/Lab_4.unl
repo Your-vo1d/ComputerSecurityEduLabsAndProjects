@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="Lab_4" version="1" scripttimeout="300" password="" author="28" countdown="60" darkmode="" mode3d="" nogrid="" joinable="2" joinable_emails="28" openable="2" openable_emails="28" editable="2" editable_emails="28" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="2" type="qemu" template="win" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="win-Win7" left="435" name="AS Filial" top="795" size="0" console="vnc" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="21fcaa28-aa9e-4229-8e08-e17081882245" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -cpu qemu64,+fsgsbase -vga std -usbdevice tablet -boot order=cd -drive file=/opt/qemu/share/qemu/virtio-win-drivers.img,index=1,if=floppy,readonly" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="5" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="printer1.png" image="linux-Ubuntu18" left="765" name="Linux5" top="795" size="0" console="vnc" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="1f1eec7f-6d5e-4af2-8942-3983ec8d578e" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="1" style="" linkstyle="Flowchart" color="#0066aa" label="" linkcfg="{&quot;midpoint&quot;:0.5}" labelpos="{}" srcpos="{}" dstpos="{}" width="2" fontsize=""/>
+      </node>
+      <node id="6" type="qemu" template="viosl2" config="0" config_script="config_viosl2.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="viosl2-Switch" left="618" name="SW-3" top="636" size="0" console="telnet" ethernet="8" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="e56e7534-c28b-44cb-b9ab-0d35112910fe" firstmac="" first_nic="" qemu_options="-machine type=pc-1.0,accel=kvm -serial mon:stdio -nographic -nodefconfig -nodefaults -rtc base=utc" qemu_version="2.4.0" qemu_arch="i386" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="1" style="" linkstyle="Flowchart" color="#0066aa" label="" linkcfg="{&quot;midpoint&quot;:0.5}" labelpos="{}" srcpos="{}" dstpos="{}" width="2" fontsize=""/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="5" style="" linkstyle="Flowchart" color="#0066aa" label="" linkcfg="{&quot;midpoint&quot;:0.5}" labelpos="{}" srcpos="{}" dstpos="{}" width="2" fontsize=""/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="7" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="3" name="Gi0/3" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="4" name="Gi1/0" type="ethernet" network_id="15" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="7" type="qemu" template="viosl2" config="0" config_script="config_viosl2.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch L3.png" image="viosl2-Switch" left="627" name="SW7-1" top="384" size="0" console="telnet" ethernet="8" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="183a578b-f462-425f-9ef0-8f0cb8a3a6d7" firstmac="" first_nic="" qemu_options="-machine type=pc-1.0,accel=kvm -serial mon:stdio -nographic -nodefconfig -nodefaults -rtc base=utc" qemu_version="2.4.0" qemu_arch="i386" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="11" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="10" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="5" style="" linkstyle="Flowchart" color="#0066aa" label="" linkcfg="{&quot;midpoint&quot;:0.5}" labelpos="{}" srcpos="{}" dstpos="{}" width="2" fontsize=""/>
+        <interface id="3" name="Gi0/3" type="ethernet" network_id="8" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="4" name="Gi1/0" type="ethernet" network_id="14" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="5" name="Gi1/1" type="ethernet" network_id="13" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="6" name="Gi1/2" type="ethernet" network_id="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="8" type="qemu" template="viosl2" config="0" config_script="config_viosl2.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch L3.png" image="viosl2-Switch" left="831" name="SW 7" top="144" size="0" console="telnet" ethernet="8" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="1dc96754-b5a4-4fa0-833d-2a903752ccc0" firstmac="" first_nic="" qemu_options="-machine type=pc-1.0,accel=kvm -serial mon:stdio -nographic -nodefconfig -nodefaults -rtc base=utc" qemu_version="2.4.0" qemu_arch="i386" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="10" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="9" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="9" type="qemu" template="viosl2" config="0" config_script="config_viosl2.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch L3.png" image="viosl2-Switch" left="1002" name="SW7-2" top="384" size="0" console="telnet" ethernet="8" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="f1911903-b09c-4dc8-b1f5-f55e65898ec4" firstmac="" first_nic="" qemu_options="-machine type=pc-1.0,accel=kvm -serial mon:stdio -nographic -nodefconfig -nodefaults -rtc base=utc" qemu_version="2.4.0" qemu_arch="i386" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="12" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="9" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="6" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="3" name="Gi0/3" type="ethernet" network_id="7" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="4" name="Gi1/0" type="ethernet" network_id="14" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="5" name="Gi1/1" type="ethernet" network_id="13" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="10" type="qemu" template="viosl2" config="0" config_script="config_viosl2.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch.png" image="viosl2-Switch" left="1002" name="SW7-4" top="663" size="0" console="telnet" ethernet="8" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="e4789e3a-d62d-4bec-8c35-c01fc62c8c5b" firstmac="" first_nic="" qemu_options="-machine type=pc-1.0,accel=kvm -serial mon:stdio -nographic -nodefconfig -nodefaults -rtc base=utc" qemu_version="2.4.0" qemu_arch="i386" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="6" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="8" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="3" name="Gi0/3" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="1" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Server.png" image="linux-Ubuntu18_Lab9" left="789" name="Server 1" top="294" size="0" console="vnc" ethernet="1" nvram="1024" ram="2048" serial="0" idlepc="0x0" cpu="2" cpulimit="1" uuid="b5caccfa-1447-444b-a567-5dd19c9c17da" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="11" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="11" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Server.png" image="linux-Ubuntu18_Lab9" left="858" name="Server 2" top="297" size="0" console="vnc" ethernet="1" nvram="1024" ram="4096" serial="0" idlepc="0x0" cpu="2" cpulimit="1" uuid="38951720-c8f8-4837-9032-e9c33d2aaa6e" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="12" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="3" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="printer1.png" image="linux-Ubuntu18" left="999" name="Printer 2" top="798" size="0" console="vnc" ethernet="1" nvram="0" ram="4096" serial="0" idlepc="0x0" cpu="2" cpulimit="1" uuid="b07f1fc1-b417-44d8-849d-ae5d2b6d3f1c" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="4" type="qemu" template="win" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="win-Win7" left="1256" name="Client" top="822" size="0" console="vnc" ethernet="1" nvram="1024" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="81d12f31-8e6a-4443-b097-7a8e1aaa9756" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -cpu qemu64,+fsgsbase -vga std -usbdevice tablet -boot order=cd -drive file=/opt/qemu/share/qemu/virtio-win-drivers.img,index=1,if=floppy,readonly" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="12" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Server.png" image="linux-Kali" left="408" name="Linux" top="567" size="0" console="vnc" ethernet="2" nvram="1024" ram="4096" serial="0" idlepc="0x0" cpu="2" cpulimit="1" uuid="7afd1a3d-d24f-48fc-997a-e590d83c0731" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="15" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="e1" type="ethernet" network_id="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="bridge" name="Switch6iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="5" type="bridge" name="Switch6iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="6" type="bridge" name="Switch10iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="7" type="bridge" name="Switch9iface_3" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="8" type="bridge" name="Switch10iface_2" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="11" type="bridge" name="Switch7iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="12" type="bridge" name="Switch9iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="9" type="bridge" name="Switch9iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="13" type="bridge" name="SW7-1iface_5" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="14" type="bridge" name="SW7-1iface_4" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="10" type="bridge" name="SW7-1iface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="4" type="bridge" name="Printer 2iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="3" type="bridge" name="Clientiface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="2" type="bridge" name="AS Filialiface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="16" type="pnet0" name="Net" left="261" top="384" visibility="1" icon="cloud.png" size=""/>
+      <network id="15" type="bridge" name="Linuxiface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="17" type="bridge" name="Linuxiface_1" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+    </networks>
+  </topology>
+</lab>
