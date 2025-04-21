@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lab name="Lab_5" version="1" scripttimeout="300" password="" author="28" countdown="60" darkmode="" mode3d="" nogrid="" joinable="2" joinable_emails="28" openable="2" openable_emails="28" editable="2" editable_emails="28" multi_config_active="">
+  <topology>
+    <nodes>
+      <node id="1" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="903" name="R1" top="246" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="0" name="fa0/0" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" type="serial" name="s1/0" remote_id="9" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="2" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="654" name="R2" top="363" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="16" type="serial" name="s1/0" remote_id="9" remote_if="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="17" type="serial" name="s1/1" remote_id="8" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="18" type="serial" name="s1/2" remote_id="5" remote_if="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="3" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="657" name="R3" top="141" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="16" type="serial" name="s1/0" remote_id="9" remote_if="18" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="17" type="serial" name="s1/1" remote_id="8" remote_if="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="18" type="serial" name="s1/2" remote_id="4" remote_if="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="4" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="474" name="R4" top="144" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="16" type="serial" name="s1/0" remote_id="8" remote_if="18" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="17" type="serial" name="s1/1" remote_id="3" remote_if="18" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="18" type="serial" name="s1/2" remote_id="7" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="5" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="471" name="R5" top="363" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="16" type="serial" name="s1/0" remote_id="8" remote_if="19" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="17" type="serial" name="s1/1" remote_id="2" remote_if="18" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="18" type="serial" name="s1/2" remote_id="6" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="6" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="309" name="R6" top="357" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="16" type="serial" name="s1/0" remote_id="5" remote_if="18" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="7" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Router.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="294" name="R7" top="168" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="0" name="fa0/0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="16" type="serial" name="s1/0" remote_id="4" remote_if="18" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="8" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Frame Relay.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="531" name="FR2" top="249" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="16" type="serial" name="s1/0" remote_id="2" remote_if="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="17" type="serial" name="s1/1" remote_id="3" remote_if="17" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="18" type="serial" name="s1/2" remote_id="4" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="19" type="serial" name="s1/3" remote_id="5" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="9" type="dynamips" template="c7200" config="0" config_script="embedded" script_timeout="" config_data="" multi_config="W10=" delay="0" icon="Frame Relay.png" image="c7200-[2]-adventerprisek9-mz.152-4.M7.image" left="744" name="FR1" top="243" size="0" console="" ethernet="0" nvram="128" ram="512" serial="0" idlepc="0x60189214" cpu="0" cpulimit="1" dynamips_options="-P 7200 -t npe-200 -o 4 -c 0x2102 -X --disk0 128 --disk1 128" slot1="PA-8T" slot2="" slot3="" slot4="" slot5="" slot6="">
+        <interface id="16" type="serial" name="s1/0" remote_id="1" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="17" type="serial" name="s1/1" remote_id="2" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="18" type="serial" name="s1/2" remote_id="3" remote_if="16" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="10" type="qemu" template="viosl2" config="0" config_script="config_viosl2.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch L3.png" image="viosl2-Switch" left="284" name="SW1" top="77" size="0" console="telnet" ethernet="8" nvram="0" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="f3be6bdf-8be0-4343-81fa-396438a6483c" firstmac="" first_nic="" qemu_options="-machine type=pc-1.0,accel=kvm -serial mon:stdio -nographic -nodefconfig -nodefaults -rtc base=utc" qemu_version="2.4.0" qemu_arch="i386" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="2" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="11" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Server.png" image="linux-Ubuntu18" left="70" name="Server" top="52" size="0" console="vnc" ethernet="1" nvram="1024" ram="2048" serial="0" idlepc="0x0" cpu="2" cpulimit="1" uuid="a2e68d84-124f-4ef2-9f9d-950dcab365ac" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="1" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="12" type="qemu" template="viosl2" config="0" config_script="config_viosl2.py" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Switch L3.png" image="viosl2-Switch" left="936" name="SW2" top="360" size="0" console="telnet" ethernet="8" nvram="0" ram="1024" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="5bc08b17-c5af-4859-84d7-57be67fb3033" firstmac="" first_nic="" qemu_options="-machine type=pc-1.0,accel=kvm -serial mon:stdio -nographic -nodefconfig -nodefaults -rtc base=utc" qemu_version="2.4.0" qemu_arch="i386" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="Gi0/0" type="ethernet" network_id="3" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="1" name="Gi0/1" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+        <interface id="2" name="Gi0/2" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="13" type="qemu" template="win" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Desktop.png" image="win-Win7" left="891" name="Win" top="512" size="0" console="vnc" ethernet="1" nvram="1024" ram="2048" serial="0" idlepc="0x0" cpu="1" cpulimit="1" uuid="a5f5c41c-0c5f-4a3c-8fab-02d04e4ecbba" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -cpu qemu64,+fsgsbase -vga std -usbdevice tablet -boot order=cd -drive file=/opt/qemu/share/qemu/virtio-win-drivers.img,index=1,if=floppy,readonly" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="e1000" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="4" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+      <node id="14" type="qemu" template="linux" config="0" config_script="" script_timeout="1200" config_data="" multi_config="W10=" delay="0" icon="Server.png" image="linux-Kali" left="553" name="Linux" top="582" size="0" console="vnc" ethernet="1" nvram="1024" ram="2048" serial="0" idlepc="0x0" cpu="2" cpulimit="1" uuid="e131f847-a4ee-4328-b545-1441b4c3a2c5" firstmac="" first_nic="" qemu_options="-machine type=pc,accel=kvm -vga virtio -usbdevice tablet -boot order=cd" qemu_version="2.12.0" qemu_arch="x86_64" qemu_nic="virtio-net-pci" username="" password="" eth_format="" console_2nd="" map_port="" map_port_2nd="">
+        <interface id="0" name="e0" type="ethernet" network_id="5" style="" linkstyle="" color="" label="" linkcfg="" labelpos="" srcpos="" dstpos="" width="" fontsize=""/>
+      </node>
+    </nodes>
+    <networks>
+      <network id="1" type="bridge" name="Serveriface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="2" type="bridge" name="SW1iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="3" type="bridge" name="R1iface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="4" type="bridge" name="Winiface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+      <network id="5" type="bridge" name="Linuxiface_0" left="0" top="0" visibility="0" icon="lan.png" size=""/>
+    </networks>
+  </topology>
+</lab>
