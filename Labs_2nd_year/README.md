@@ -32,7 +32,7 @@
 
 1. **Клонируйте репозиторий**:
    ```bash
-   git clone https://github.com/Sib-Coder/TSU_CompSec_Labs-Project.git
+   git clone https://github.com/Your-vo1d/ComputerSecurityEduLabsAndProjects
 2. **Перейдите к нужной лабораторной работе**:
 
 3. **Запустите код**:
