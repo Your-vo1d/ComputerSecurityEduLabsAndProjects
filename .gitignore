@@ -7,3 +7,4 @@ venv/
 *.exe
 *.docx
 *.out
+*.o
