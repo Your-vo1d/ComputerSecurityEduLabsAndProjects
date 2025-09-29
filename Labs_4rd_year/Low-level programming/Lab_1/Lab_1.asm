@@ -5,6 +5,8 @@ section .data
     prompt_b_len equ $ - prompt_b
     prompt_error_negative_number db 'Error: negative value', 10
     prompt_error_negative_number_len equ $ - prompt_error_negative_number
+    prompt_error_b db 'Error', 5
+    prompt_error_b_len equ $ - prompt_error_b
     prompt_result db 'Result: '
     prompt_result_len equ $ - prompt_result
     space    db ' '
@@ -48,7 +50,12 @@ _start:
     mov edx, 12
     int 0x80
     call atoi
+    cmp eax, [a]
+    jg error_b
+    cmp eax, 0
+    je error_b
     mov [b], eax
+
 
     mov eax, [a]
     xor edx, edx        ; Clear EDX before division
@@ -117,6 +124,17 @@ error_negative_number:
     mov ebx, 1
     mov ecx, prompt_error_negative_number
     mov edx, prompt_error_negative_number_len
+    int 0x80
+
+    mov eax, 1          ; номер системного вызова exit
+    xor ebx, ebx        ; код возврата 0
+    int 0x80            ; вызов ядра
+
+error_b:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, prompt_error_b
+    mov edx, prompt_error_b_len
     int 0x80
 
     mov eax, 1          ; номер системного вызова exit
