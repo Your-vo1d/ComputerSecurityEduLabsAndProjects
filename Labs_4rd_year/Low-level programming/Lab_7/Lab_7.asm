@@ -1,130 +1,175 @@
-section .data
-    prompt db "Enter boolean vector (only 0 and 1, no spaces): ", 0
-    result_one db "Majority function = 1", 0
-    result_zero db "Majority function = 0", 0
-    error_msg db "Error: Invalid input! Only characters '0' and '1' are allowed.", 0
-    newline db 10, 0
+; majority_full.asm
+; 32-бит Linux, NASM
+; Мажоритарная функция: 1, если единиц > нулей
+; Ввод: строка ТОЛЬКО из 0 и 1, затем n
+; ОШИБКА, если в векторе есть символ ≠ 0/1
 
 section .bss
-    input resb 100      ; Буфер для ввода
-    count_ones resd 1   ; Счетчик единиц
-    count_zeros resd 1  ; Счетчик нулей
+    buf  resb 128     ; буфер ввода
+    vec  resd 1       ; вектор
+    len  resd 1       ; длина n
+
+section .data
+    p1   db "Введите булев вектор (0 и 1): ",0
+    p1l  equ $-p1
+    p2   db "Введите длину n: ",0
+    p2l  equ $-p2
+    err  db "ОШИБКА: только 0 и 1!",10
+    errl equ $-err
+    nl   db 10
 
 section .text
-    global _start
+global _start
 
 _start:
-    ; Вывод приглашения
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, prompt
-    mov edx, 48
+    ; приглашение 1
+    mov eax,4
+    mov ebx,1
+    mov ecx,p1
+    mov edx,p1l
     int 0x80
 
-    ; Чтение ввода с клавиатуры
-    mov eax, 3
-    mov ebx, 0
-    mov ecx, input
-    mov edx, 100
+    ; чтение строки
+    mov eax,3
+    mov ebx,0
+    mov ecx,buf
+    mov edx,128
     int 0x80
 
-    ; Инициализация счетчиков
-    mov dword [count_ones], 0
-    mov dword [count_zeros], 0
-
-    ; Обработка введенного вектора
-    mov esi, input      ; Указатель на начало строки
-
-process_loop:
-    mov al, [esi]       ; Читаем текущий символ
-    
-    ; Проверка на конец строки
-    cmp al, 0
-    je check_result
-    cmp al, 10
-    je check_result
-    
-    ; Проверка корректности символа
-    cmp al, '0'
-    je found_zero
-    cmp al, '1'
-    je found_one
-    
-    ; Если символ не '0' и не '1' - ошибка
-    jmp input_error
-
-found_zero:
-    inc dword [count_zeros]
-    jmp next_char
-
-found_one:
-    inc dword [count_ones]
-    jmp next_char
-
-next_char:
-    inc esi             ; Переходим к следующему символу
-    jmp process_loop
-
-input_error:
-    ; Вывод сообщения об ошибке
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, error_msg
-    mov edx, 64
+    ; парсинг: строка → EDX, проверка на 0/1
+    xor edx,edx
+    xor ecx,ecx
+    mov esi,buf
+.parse:
+    mov al,[esi]
+    inc esi
+    cmp al,10
+    je .endp
+    cmp al,'0'
+    je .ok0
+    cmp al,'1'
+    je .ok1
+    ; ошибка: символ не 0 и не 1
+    mov eax,4
+    mov ebx,1
+    mov ecx,err
+    mov edx,errl
     int 0x80
-    
-    ; Новая строка и завершение с ошибкой
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, newline
-    mov edx, 2
-    int 0x80
-    
-    mov eax, 1
-    mov ebx, 1          ; Код возврата 1 (ошибка)
+    mov eax,1
+    mov ebx,1
+    int 0x80          ; выход с кодом 1
+.ok0:
+    ; бит = 0 → ничего
+    jmp .next
+.ok1:
+    mov ebx,1
+    shl ebx,cl
+    or  edx,ebx
+.next:
+    inc ecx
+    cmp ecx,32
+    jb .parse
+.endp:
+    mov [vec],edx
+
+    ; приглашение 2
+    mov eax,4
+    mov ebx,1
+    mov ecx,p2
+    mov edx,p2l
     int 0x80
 
-check_result:
-    ; Проверяем, что был введен хотя бы один символ
-    mov eax, [count_ones]
-    mov ebx, [count_zeros]
-    add eax, ebx
-    cmp eax, 0
-    je input_error      ; Если нет ни единиц, ни нулей - ошибка
-
-    ; Сравниваем количество единиц и нулей
-    mov eax, [count_ones]
-    mov ebx, [count_zeros]
-    cmp eax, ebx
-    jg output_one       ; Если единиц больше нулей
-    jmp output_zero     ; Иначе
-
-output_one:
-    ; Вывод результата "1"
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, result_one
-    mov edx, 21
-    int 0x80
-    jmp exit_success
-
-output_zero:
-    ; Вывод результата "0"
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, result_zero
-    mov edx, 21
+    ; чтение n
+    mov eax,3
+    mov ebx,0
+    mov ecx,buf
+    mov edx,128
     int 0x80
 
-exit_success:
-    ; Вывод новой строки
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, newline
-    mov edx, 2
+    ; строка → число
+    xor eax,eax
+    mov esi,buf
+.conv:
+    mov bl,[esi]
+    inc esi
+    cmp bl,10
+    je .done
+    sub bl,'0'
+    cmp bl,9
+    ja .conv_err
+    imul eax,10
+    add eax,ebx
+    jmp .conv
+.conv_err:
+    mov eax,4
+    mov ebx,1
+    mov ecx,err
+    mov edx,errl
+    int 0x80
+    mov eax,1
+    mov ebx,2
+    int 0x80
+.done:
+    test eax,eax
+    jz .zero_n
+    cmp eax,32
+    ja .zero_n
+    mov [len],eax
+
+    ; вызов
+    mov edx,[vec]
+    mov ecx,[len]
+    call majority
+
+    ; вывод
+    add al,'0'
+    mov [buf],al
+    mov eax,4
+    mov ebx,1
+    mov ecx,buf
+    mov edx,1
     int 0x80
 
-    ; Завершение программы успешно
-    mov eax, 1
-    xor ebx, ebx        ; Код возврата 0 (успех)
+    mov eax,4
+    mov ebx,1
+    mov ecx,nl
+    mov edx,1
     int 0x80
+
+    mov eax,1
+    xor ebx,ebx
+    int 0x80
+
+.zero_n:
+    mov eax,4
+    mov ebx,1
+    mov ecx,err
+    mov edx,errl
+    int 0x80
+    mov eax,1
+    mov ebx,3
+    int 0x80
+
+
+; majority: EDX=вектор, ECX=n → AL=1/0
+majority:
+    test ecx,ecx
+    jz .zero
+    xor ebx,ebx
+    mov esi,edx
+.loop:
+    test esi,1
+    jz .skip
+    inc ebx
+.skip:
+    shr esi,1
+    dec ecx
+    jnz .loop
+    mov eax,ebx
+    shl eax,1
+    cmp eax,[len]
+    seta al
+    ret
+.zero:
+    xor eax,eax
+    ret
